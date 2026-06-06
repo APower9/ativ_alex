@@ -1,0 +1,6 @@
+# Windows / Google Drive
+desktop.ini
+Thumbs.db
+
+# Claude Code local
+.claude/

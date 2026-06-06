@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aventuras das Vogais - Jogar</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&amp;family=Quicksand:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#004494",
+                      "inverse-primary": "#adc6ff",
+                      "secondary-container": "#fcbc05",
+                      "on-tertiary-fixed-variant": "#165200",
+                      "error": "#ba1a1a",
+                      "surface-dim": "#d3d8ff",
+                      "surface-container-low": "#f4f2ff",
+                      "outline-variant": "#c2c6d6",
+                      "on-tertiary-container": "#f8ffee",
+                      "tertiary-fixed": "#84fe58",
+                      "on-primary-container": "#fefcff",
+                      "on-surface": "#001159",
+                      "on-secondary-fixed": "#261900",
+                      "on-primary-fixed": "#001a41",
+                      "outline": "#727785",
+                      "on-tertiary": "#ffffff",
+                      "surface-tint": "#005ac2",
+                      "on-surface-variant": "#414754",
+                      "error-container": "#ffdad6",
+                      "primary-fixed": "#d8e2ff",
+                      "background": "#fbf8ff",
+                      "on-secondary": "#ffffff",
+                      "on-background": "#001159",
+                      "on-secondary-fixed-variant": "#5c4200",
+                      "on-secondary-container": "#6b4e00",
+                      "secondary": "#7a5900",
+                      "surface-container": "#ececff",
+                      "surface": "#fbf8ff",
+                      "on-primary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "tertiary": "#1f6a00",
+                      "surface-bright": "#fbf8ff",
+                      "on-error-container": "#93000a",
+                      "primary-fixed-dim": "#adc6ff",
+                      "tertiary-fixed-dim": "#69e03e",
+                      "primary-container": "#1470e8",
+                      "primary": "#0058bd",
+                      "tertiary-container": "#298600",
+                      "inverse-on-surface": "#f0efff",
+                      "on-tertiary-fixed": "#052100",
+                      "surface-container-high": "#e5e6ff",
+                      "secondary-fixed": "#ffdea2",
+                      "surface-variant": "#dee1ff",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-container-highest": "#dee1ff",
+                      "secondary-fixed-dim": "#fcbc05",
+                      "inverse-surface": "#00218d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "sm": "12px",
+                      "base": "8px",
+                      "margin-desktop": "80px",
+                      "gutter": "24px",
+                      "md": "24px",
+                      "lg": "48px",
+                      "margin-mobile": "16px",
+                      "xs": "4px",
+                      "xl": "64px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Quicksand"],
+                      "body-md": ["Quicksand"],
+                      "headline-md": ["Quicksand"],
+                      "display-lg-mobile": ["Quicksand"],
+                      "label-caps": ["Lexend"],
+                      "headline-sm": ["Quicksand"],
+                      "display-lg": ["Quicksand"]
+              },
+              "fontSize": {
+                      "body-lg": ["20px", {"lineHeight": "30px", "fontWeight": "500"}],
+                      "body-md": ["18px", {"lineHeight": "28px", "fontWeight": "500"}],
+                      "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                      "label-caps": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        @keyframes bounce-sm {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-bounce-sm {
+            animation: bounce-sm 2s infinite ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+        .shake {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .pop {
+            animation: pop 0.3s ease-out forwards;
+        }
+        
+        .btn-chunky {
+            box-shadow: 0 8px 0 0 var(--tw-shadow-color);
+            transition: all 0.1s ease;
+        }
+        .btn-chunky:active {
+            box-shadow: 0 0px 0 0 var(--tw-shadow-color);
+            transform: translateY(8px);
+        }
+
+        .btn-chunky-selected {
+            box-shadow: 0 4px 0 0 var(--tw-shadow-color);
+            transform: translateY(4px);
+        }
+
+        .bg-pattern {
+            background-image: radial-gradient(circle, #dee1ff 2px, transparent 2px);
+            background-size: 24px 24px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-lg selection:bg-primary-container selection:text-on-primary-container" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDVWCgb9pfg6Bot4RwKHKpoR9VVd4ttNF7ZDgjaM16xIJBPuIPjoNI30NGVcgs1a1FnJW-dV_AGAW9kWlL6-Jz8og6xMZ3MZbX7mQj4ou6OLoiI8K0qZ5qCQxjt71PIbUHcvMP5ZnpYbb0uF7tkvnh-2Ofuhu8i1077kYbZSeStWhUp_irUFZuNlcACipE0ugetsiVv_Kd9q889kpRgCcGWwOpJVcSqGJpDt2ams8p4PLAWfgeuJEmLVRgmcxC-p0ISFzJ1n5SXNeM'); background-size: cover; background-position: center; background-attachment: fixed;">
+<!-- TopAppBar -->
+<header class="w-full top-0 px-4 pt-4 bg-transparent flat no shadows">
+<div class="flex justify-between items-center w-full max-w-7xl mx-auto bg-white/60 backdrop-blur-sm rounded-full px-6 py-2 shadow-sm border border-white/50">
+<h1 class="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight hidden md:block">
+                Aventuras das Vogais
+            </h1>
+<div class="md:hidden">
+<!-- Mobile empty spacer -->
+</div>
+<div class="flex gap-md">
+<button aria-label="Stars" class="text-primary hover:scale-105 transition-transform active:translate-y-1 transition-all p-2 rounded-full hover:bg-white/50">
+<span class="material-symbols-outlined text-[32px]">stars</span>
+</button>
+<button aria-label="Settings" class="text-primary hover:scale-105 transition-transform active:translate-y-1 transition-all p-2 rounded-full hover:bg-white/50">
+<span class="material-symbols-outlined text-[32px]">settings</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col md:flex-row items-center justify-center p-md md:p-margin-desktop gap-lg pb-32 w-full max-w-7xl mx-auto">
+<!-- Guide Character Area -->
+<div class="hidden md:flex flex-col items-center justify-center w-1/3 p-md animate-bounce-sm">
+<div class="w-64 h-64 rounded-full bg-secondary-container flex items-center justify-center border-4 border-secondary shadow-[0_8px_0_0_#7a5900] relative cursor-pointer" onclick="playPromptAudio()">
+<img alt="Mascote Amigável" class="w-full h-full object-cover rounded-full p-2" data-alt="A highly stylized, cute 3D render of a friendly, cartoonish animal mascot, like a colorful toucan or a playful dog, designed for a children's educational app. The character has large, expressive eyes and a welcoming smile. It is set against a vibrant yellow background. The lighting is soft, bright, and cheerful, embodying a playful learning aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJIHqMeOAS6wAauD7Yi1bPUTqaa_mnDwiPXdL0P5dH13VN3eZknA4WTenD64Lz2msdXoiyRbgWqbjvp0D-UhhSDdzKmwnNhegH3rrPSFiH9Kyy_VLjzKM-iEqETAv2bWUBcFKv2xBxB6_PVT6nS4jfuHx8OnzrhZx6xOGffQ-kwvUiOun4vJDYbOWd_k_XXunXaysCJ6ugAzGfAYazK68F8exWiWx1J1-UZ66fjxNVQ3chEFd9JdFYvKBVYOzk22rWXtExj_aSY20"/>
+<!-- Speech Bubble -->
+<div class="absolute -top-16 -right-16 bg-surface-container-lowest border-4 border-primary rounded-xl p-md shadow-[0_8px_0_0_#0058bd] flex items-center justify-center z-10 w-48 text-center font-headline-sm text-headline-sm text-primary">
+<span id="instruction-text">Acha a primeira letra!</span>
+<div class="absolute -bottom-4 left-8 w-6 h-6 bg-surface-container-lowest border-b-4 border-r-4 border-primary transform rotate-45"></div>
+</div>
+</div>
+</div>
+<!-- Activity Area -->
+<div class="flex flex-col items-center w-full md:w-2/3 max-w-lg space-y-lg relative bg-white/40 backdrop-blur-md p-8 rounded-3xl border-4 border-white/60 shadow-xl">
+<!-- Confetti Canvas (hidden by default) -->
+<canvas class="absolute inset-0 pointer-events-none z-50 w-full h-full hidden" id="confetti-canvas"></canvas>
+<!-- Activity Card -->
+<div class="bg-surface-container-lowest w-full rounded-xl border-4 border-primary shadow-[0_12px_0_0_#0058bd] p-md flex flex-col items-center transition-transform duration-300" id="activity-card">
+<div class="w-full aspect-square bg-surface-variant rounded-lg overflow-hidden border-4 border-surface-container-high mb-md relative flex items-center justify-center cursor-pointer group" onclick="playWordAudio()">
+<img alt="Imagem da palavra" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A stylized, cheerful illustration of a cute, friendly bee hovering in front of a bright blue sky. The art style is flat vector, highly colorful, with bold outlines, typical of modern children's books or educational apps. The bee has a happy face, large eyes, and striped body. The overall mood is vibrant, sunny, and engaging." id="word-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQGoB6n54gJl89qSzI2lU0V9tlrRlvYErEmhnSU7tWP6uEOZfGjYm7QL4Y-frix8X4QhIfEjVoG0FifRYt9nIbaA7NgWgjD5dr_LLHNFtvYpp47x4nkLIm5FLwGfTcnv_0aOV2uXmvTenPSiy2a5ns-oKNn095jY1Qhw8e3NuwHtPk9CP0pjFylSTb7m2i-52uNVw3kJoRLQDg6XLqcrqirdjfTXcX7xKW4n6tUUbPyMikrY8-Pl6If_yW2qkym-gMutiN-YvV1-A"/>
+<button aria-label="Ouvir Palavra" class="absolute bottom-4 right-4 bg-primary text-on-primary rounded-full p-3 shadow-lg hover:scale-110 active:scale-95 transition-transform">
+<span class="material-symbols-outlined">volume_up</span>
+</button>
+</div>
+<h2 class="font-display-lg text-display-lg text-on-surface lowercase" id="word-text">abelha</h2>
+</div>
+<!-- Options Area -->
+<div class="flex justify-center gap-md w-full" id="options-container">
+<!-- Options will be generated by JS -->
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Shell) -->
+<nav class="fixed bottom-0 w-full rounded-t-lg bg-surface/90 backdrop-blur-md dark:bg-surface-container border-t-4 border-primary-container shadow-[0_-8px_0_0_rgba(20,112,232,0.2)] md:hidden z-50">
+<div class="flex justify-around items-center px-4 pb-4 pt-2">
+<!-- Jogar (Active) -->
+<a class="flex flex-col items-center justify-center bg-secondary-container text-on-secondary-container rounded-xl px-6 py-2 scale-110 shadow-tw-shadow hover:bg-surface-container-high transition-colors active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" style="font-variation-settings: 'FILL' 1;">videogame_asset</span>
+<span class="font-label-caps text-label-caps">Jogar</span>
+</a>
+<!-- Coleção (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-80 hover:bg-surface-container-high transition-colors active:scale-95 duration-100 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">auto_stories</span>
+<span class="font-label-caps text-label-caps">Coleção</span>
+</a>
+<!-- Troféus (Inactive) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant opacity-80 hover:bg-surface-container-high transition-colors active:scale-95 duration-100 p-2 rounded-lg" href="#">
+<span class="material-symbols-outlined text-2xl mb-1">emoji_events</span>
+<span class="font-label-caps text-label-caps">Troféus</span>
+</a>
+</div>
+</nav>
+<script>
+        // Game Logic & Interactivity
+        const gameData = [
+            {
+                word: "abelha",
+                initial: "A",
+                options: ["A", "E", "O"],
+                imageSrc: "https://images.unsplash.com/photo-1588693810237-6d6fac045b62?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                imageAlt: "A stylized, cheerful illustration of a cute, friendly bee hovering in front of a bright blue sky. The art style is flat vector, highly colorful, with bold outlines, typical of modern children's books or educational apps. The bee has a happy face, large eyes, and striped body. The overall mood is vibrant, sunny, and engaging."
+            },
+            {
+                word: "elefante",
+                initial: "E",
+                options: ["I", "E", "U"],
+                imageSrc: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                imageAlt: "A stylized 3D render of a cute baby elephant sitting on green grass. The aesthetic is playful, colorful, and soft, suitable for a kids educational game. Bright, cheerful lighting."
+            },
+            {
+                word: "urso",
+                initial: "U",
+                options: ["A", "O", "U"],
+                imageSrc: "https://images.unsplash.com/photo-1534361960057-19889db9621e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+                imageAlt: "A playful, flat vector illustration of a cuddly brown bear waving its paw. Background is a soft, pastel forest scene. Highly saturated colors, rounded shapes, playful learning design style."
+            }
+        ];
+
+        let currentLevel = 0;
+        let isAnimating = false;
+
+        function loadLevel(levelIndex) {
+            if(levelIndex >= gameData.length) levelIndex = 0; // loop
+            currentLevel = levelIndex;
+            const data = gameData[levelIndex];
+
+            // Update UI
+            document.getElementById('word-text').textContent = data.word;
+            const imgEl = document.getElementById('word-image');
+            imgEl.src = data.imageSrc;
+            imgEl.setAttribute('data-alt', data.imageAlt);
+
+            // Generate Buttons
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            // Randomize options slightly
+            const shuffledOptions = [...data.options].sort(() => Math.random() - 0.5);
+
+            shuffledOptions.forEach(letter => {
+                const btnHTML = `
+                    <button onclick="handleGuess('${letter}', '${data.initial}', this)" 
+                            class="w-32 h-32 rounded-full border-4 text-[64px] font-bold flex items-center justify-center btn-chunky hover:scale-105 active:scale-95 transition-transform
+                                   bg-surface-container-lowest text-primary border-primary" style="--tw-shadow-color: #0058bd;">
+                        ${letter}
+                    </button>
+                `;
+                optionsContainer.insertAdjacentHTML('beforeend', btnHTML);
+            });
+            
+            // Announce word
+            setTimeout(playWordAudio, 500);
+        }
+
+        function handleGuess(guess, correct, btnElement) {
+            if(isAnimating) return;
+
+            if(guess === correct) {
+                // Success
+                isAnimating = true;
+                btnElement.classList.remove('bg-surface-container-lowest', 'text-primary', 'border-primary');
+                btnElement.classList.add('bg-tertiary-fixed', 'text-on-tertiary-fixed', 'border-tertiary-container');
+                btnElement.style.setProperty('--tw-shadow-color', '#298600');
+                btnElement.classList.add('pop');
+                
+                document.getElementById('activity-card').classList.add('border-tertiary-fixed', 'shadow-[0_12px_0_0_#298600]');
+                
+                playSuccessAudio();
+                createConfetti();
+
+                setTimeout(() => {
+                    document.getElementById('activity-card').classList.remove('border-tertiary-fixed', 'shadow-[0_12px_0_0_#298600]');
+                    isAnimating = false;
+                    loadLevel(currentLevel + 1);
+                }, 2500);
+
+            } else {
+                // Error
+                isAnimating = true;
+                btnElement.classList.add('shake', 'bg-error-container', 'text-on-error-container', 'border-error');
+                btnElement.style.setProperty('--tw-shadow-color', '#ba1a1a');
+                
+                playErrorAudio();
+
+                setTimeout(() => {
+                    btnElement.classList.remove('shake', 'bg-error-container', 'text-on-error-container', 'border-error');
+                    btnElement.style.setProperty('--tw-shadow-color', '#0058bd');
+                    isAnimating = false;
+                }, 500);
+            }
+        }
+
+        // --- Audio Fallbacks (Web Speech API) ---
+        const synth = window.speechSynthesis;
+        let voices = [];
+
+        function populateVoiceList() {
+            voices = synth.getVoices().sort(function (a, b) {
+                const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
+                if (aname < bname) return -1;
+                else if (aname == bname) return 0;
+                else return +1;
+            });
+        }
+        populateVoiceList();
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = populateVoiceList;
+        }
+
+        function speakText(text) {
+            if (synth.speaking) {
+                synth.cancel();
+            }
+            if (text !== '') {
+                const utterThis = new SpeechSynthesisUtterance(text);
+                utterThis.lang = 'pt-BR';
+                utterThis.pitch = 1.2; // slightly higher pitch for kids
+                utterThis.rate = 0.9;  // slightly slower
+                
+                // Try to find a Portuguese voice
+                const ptVoice = voices.find(v => v.lang.startsWith('pt'));
+                if(ptVoice) utterThis.voice = ptVoice;
+
+                synth.speak(utterThis);
+            }
+        }
+
+        function playPromptAudio() {
+            speakText("Selecione a letra inicial da palavra.");
+        }
+
+        function playWordAudio() {
+            const word = gameData[currentLevel].word;
+            speakText(word);
+        }
+
+        function playSuccessAudio() {
+            speakText("Muito bem! " + gameData[currentLevel].initial + " de " + gameData[currentLevel].word);
+        }
+
+        function playErrorAudio() {
+            speakText("Ops, tente de novo!");
+        }
+
+        // --- Simple Confetti Effect ---
+        function createConfetti() {
+            // Simplified HTML-based confetti for reliability without external libs
+            const container = document.body;
+            const colors = ['#0058bd', '#fcbc05', '#84fe58', '#ba1a1a'];
+            
+            for(let i=0; i<30; i++) {
+                const confetto = document.createElement('div');
+                confetto.style.position = 'fixed';
+                confetto.style.width = '10px';
+                confetto.style.height = '10px';
+                confetto.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetto.style.left = Math.random() * 100 + 'vw';
+                confetto.style.top = '-10px';
+                confetto.style.zIndex = '9999';
+                confetto.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                
+                container.appendChild(confetto);
+
+                // Animate falling
+                const duration = Math.random() * 1000 + 1000;
+                const endY = window.innerHeight;
+                
+                confetto.animate([
+                    { transform: `translate3d(0,0,0) rotate(0deg)`, opacity: 1 },
+                    { transform: `translate3d(${Math.random()*100 - 50}px, ${endY}px, 0) rotate(${Math.random()*360}deg)`, opacity: 0 }
+                ], {
+                    duration: duration,
+                    easing: 'cubic-bezier(.37,0,.63,1)',
+                    fill: 'forwards'
+                });
+
+                setTimeout(() => {
+                    confetto.remove();
+                }, duration);
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', () => {
+            loadLevel(0);
+            
+            // Interaction to enable audio
+            document.body.addEventListener('click', function initAudio() {
+                // silent speech to unlock audio context
+                const utterThis = new SpeechSynthesisUtterance('');
+                synth.speak(utterThis);
+                document.body.removeEventListener('click', initAudio);
+            }, { once: true });
+        });
+
+    </script>
+</body></html>

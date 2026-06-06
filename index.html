@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aventuras das Vogais</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  body { font-family: "Quicksand", sans-serif; }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+
+  @keyframes bounce-sm {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  .animate-bounce-sm { animation: bounce-sm 2s ease-in-out infinite; }
+
+  @keyframes pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.18); }
+    100% { transform: scale(1); }
+  }
+  .animate-pop { animation: pop 0.35s ease-out forwards; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-7px); }
+    40% { transform: translateX(7px); }
+    60% { transform: translateX(-7px); }
+    80% { transform: translateX(4px); }
+  }
+  .animate-shake { animation: shake 0.45s cubic-bezier(.36,.07,.19,.97) both; }
+
+  @keyframes glow-correct {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(40,134,0,0.4), 0 8px 0 0 #298600; }
+    50%       { box-shadow: 0 0 22px 8px rgba(40,134,0,0.7), 0 8px 0 0 #298600; }
+  }
+  .animate-glow-correct { animation: glow-correct 0.6s ease-in-out infinite; }
+
+  @keyframes bounce-once {
+    0%   { transform: scale(1); }
+    30%  { transform: scale(1.06); }
+    65%  { transform: scale(0.97); }
+    100% { transform: scale(1); }
+  }
+  .animate-bounce-once { animation: bounce-once 0.5s ease-out forwards; }
+
+  /* ── Botões de letra ─────────────────────────────── */
+  .btn-letter {
+    width: 112px; height: 112px;
+    border-radius: 9999px;
+    border: 4px solid #0058bd;
+    background: #ffffff;
+    color: #0058bd;
+    font-family: "Quicksand", sans-serif;
+    font-size: 56px; font-weight: 700;
+    box-shadow: 0 8px 0 0 #0058bd;
+    cursor: pointer;
+    transition: box-shadow 0.08s ease, transform 0.08s ease;
+    display: flex; align-items: center; justify-content: center;
+    user-select: none;
+  }
+  .btn-letter:hover  { transform: scale(1.05); }
+  .btn-letter:active { box-shadow: 0 0px 0 0 #0058bd; transform: translateY(8px); }
+  .btn-letter.correct {
+    background: #84fe58; border-color: #298600; color: #052100;
+    box-shadow: 0 8px 0 0 #298600;
+  }
+  .btn-letter.wrong {
+    background: #ffdad6; border-color: #ba1a1a; color: #93000a;
+    box-shadow: 0 8px 0 0 #ba1a1a;
+  }
+
+  /* ── Glassmorphism ───────────────────────────────── */
+  .glass {
+    background: rgba(255,255,255,0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 2px solid rgba(255,255,255,0.65);
+  }
+
+  /* ── Tela final ──────────────────────────────────── */
+  #end-screen {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,17,89,0.55);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #end-screen.hidden { display: none; }
+
+  /* ── Balão de fala ───────────────────────────────── */
+  #speech-bubble {
+    position: absolute;
+    /* à direita e levemente acima do centro do círculo */
+    top: 0px; left: 188px;
+    z-index: 50;
+    background: #ffffff;
+    border: 3px solid #0058bd;
+    border-radius: 16px;
+    padding: 10px 14px;
+    box-shadow: 0 4px 0 0 #0058bd;
+    font-size: 13px; font-weight: 700; color: #0058bd;
+    width: 148px; text-align: center; line-height: 1.4;
+    font-family: "Quicksand", sans-serif;
+    white-space: normal;
+    pointer-events: none;
+  }
+  /* triângulo apontando para a esquerda (← para o personagem) */
+  #speech-bubble::before {
+    content: "";
+    position: absolute;
+    top: 20px; left: -12px;
+    width: 0; height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 12px solid #0058bd;
+  }
+  #speech-bubble::after {
+    content: "";
+    position: absolute;
+    top: 22px; left: -8px;
+    width: 0; height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 10px solid #ffffff;
+  }
+
+  /* ── Tela de menu / tiles de atividade ───────────────── */
+  #menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    width: 100%;
+    max-width: 540px;
+  }
+  .tile {
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    background: transparent; border: none; padding: 0;
+    font-family: "Quicksand", sans-serif;
+  }
+  .tile-face {
+    width: 100%; aspect-ratio: 1; border-radius: 20px;
+    display: flex; align-items: center; justify-content: center;
+    background: #fff; border: 4px solid #0058bd; box-shadow: 0 8px 0 0 #0058bd;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .tile-active { cursor: pointer; }
+  .tile-active:hover  .tile-face { transform: scale(1.04); }
+  .tile-active:active .tile-face { box-shadow: 0 0 0 0 #0058bd; transform: translateY(8px); }
+  .tile-label { font-size: 22px; font-weight: 700; color: #001159; text-transform: lowercase; }
+  .tile-locked { cursor: default; }
+  .tile-locked .tile-face {
+    background: rgba(255,255,255,0.45); border: 4px dashed #9aa3c7;
+    box-shadow: 0 8px 0 0 rgba(154,163,199,0.45);
+  }
+  .vowels {
+    display: flex; gap: 2px; font-weight: 700; font-family: "Quicksand", sans-serif;
+    font-size: clamp(22px, 7vw, 42px); line-height: 1;
+  }
+</style>
+</head>
+
+<body style="
+  min-height:100vh;
+  background-color:#dee1ff;
+  background-size: cover; background-position: center; background-attachment: fixed;
+  overflow-x: hidden;
+">
+
+<!-- ── Tela de menu (seleção de atividade) ───────────────────────────────────── -->
+<div id="menu-screen">
+  <header class="w-full px-4 pt-4 pb-2">
+    <div class="glass rounded-full px-6 py-3 flex justify-between items-center max-w-5xl mx-auto shadow-sm">
+      <h1 style="font-size:22px;font-weight:700;color:#0058bd;">Escolha uma atividade</h1>
+      <button
+        class="bg-toggle-btn" onclick="toggleBackground()" title="Mostrar imagem de fundo"
+        style="
+          background:#0058bd; color:#fff; border:none; border-radius:9999px;
+          width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+          cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,0.2); transition:transform 0.1s;
+        "
+        onmouseenter="this.style.transform='scale(1.1)'"
+        onmouseleave="this.style.transform='scale(1)'"
+      >
+        <span class="material-symbols-outlined" style="font-size:20px;">hide_image</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="flex items-center justify-center px-4 py-6 min-h-[calc(100vh-80px)]">
+    <div id="menu-grid">
+      <!-- Atividade ativa: vogais -->
+      <button class="tile tile-active" onclick="selectVowels()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#e8423a">A</span><span style="color:#f59e0b">E</span><span style="color:#2bb24c">I</span><span style="color:#0058bd">O</span><span style="color:#8b3fc0">U</span>
+          </div>
+        </div>
+        <span class="tile-label">vogais</span>
+      </button>
+
+      <!-- 8 placeholders -->
+      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
+      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
+      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
+      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
+      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
+      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
+      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
+      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
+    </div>
+  </main>
+</div>
+
+<!-- ── Jogo (tela) ───────────────────────────────────────────────────────────── -->
+<div id="game-screen" style="display:none;">
+
+<!-- ── Header ──────────────────────────────────────────────────────────────── -->
+<header class="w-full px-4 pt-4 pb-2">
+  <div class="glass rounded-full px-6 py-3 flex justify-between items-center max-w-5xl mx-auto shadow-sm">
+    <h1 style="font-size:22px;font-weight:700;color:#0058bd;">Aventuras das Vogais</h1>
+    <div style="display:flex;align-items:center;gap:14px;">
+      <button
+        onclick="showMenu()" title="Voltar ao menu"
+        style="
+          background:#0058bd; color:#fff; border:none; border-radius:9999px;
+          width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+          cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,0.2); transition:transform 0.1s;
+        "
+        onmouseenter="this.style.transform='scale(1.1)'"
+        onmouseleave="this.style.transform='scale(1)'"
+      >
+        <span class="material-symbols-outlined" style="font-size:20px;">home</span>
+      </button>
+      <span id="progress-text" style="font-size:16px;font-weight:700;color:#0058bd;font-family:'Lexend',sans-serif;">1 / 20</span>
+      <button
+        id="bg-toggle" class="bg-toggle-btn" onclick="toggleBackground()" title="Ocultar imagem de fundo"
+        style="
+          background:#0058bd; color:#fff; border:none; border-radius:9999px;
+          width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+          cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,0.2); transition:transform 0.1s;
+        "
+        onmouseenter="this.style.transform='scale(1.1)'"
+        onmouseleave="this.style.transform='scale(1)'"
+      >
+        <span class="material-symbols-outlined" style="font-size:20px;">image</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ── Jogo ─────────────────────────────────────────────────────────────────── -->
+<main class="flex flex-col md:flex-row items-center justify-center gap-10 px-4 py-6 max-w-5xl mx-auto min-h-[calc(100vh-80px)]">
+
+  <!-- Personagem -->
+  <div
+    class="animate-bounce-sm flex-shrink-0"
+    style="position:relative; width:180px;"
+  >
+    <div id="speech-bubble" style="display:none;">Seleciona a letra inicial da palavra!</div>
+
+    <!-- Grupo do personagem: disco (moldura) + menino "saindo" do círculo -->
+    <div
+      id="character-group"
+      onclick="replayWordAudio()"
+      style="
+        position:relative; width:180px; height:225px;
+        cursor:pointer; transition:transform 0.1s;
+      "
+      onmouseenter="this.style.transform='scale(1.05)'"
+      onmouseleave="this.style.transform='scale(1)'"
+    >
+      <!-- Disco amarelo (moldura) — fica atrás e recorta o fallback SVG -->
+      <div
+        id="character-btn"
+        style="
+          position:absolute; top:45px; left:0;
+          width:180px; height:180px; border-radius:9999px;
+          background:#fcbc05; border:4px solid #7a5900;
+          box-shadow:0 8px 0 0 #7a5900;
+          display:flex; align-items:center; justify-content:center;
+          overflow:hidden;
+        "
+      >
+      <svg
+        id="menino-rosto"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="24 3 52 52"
+        style="width:176px;height:176px;display:none;"
+      >
+        <ellipse cx="50" cy="20" rx="22" ry="17" fill="#4a2408"/>
+        <circle cx="50" cy="26" r="20" fill="#FDBCB4"/>
+        <path d="M30 20 Q34 11 50 11 Q66 11 70 20 Q64 15 50 15 Q36 15 30 20Z" fill="#4a2408"/>
+        <circle cx="43" cy="24" r="3" fill="#222"/>
+        <circle cx="57" cy="24" r="3" fill="#222"/>
+        <circle cx="44" cy="23" r="1.2" fill="white"/>
+        <circle cx="58" cy="23" r="1.2" fill="white"/>
+        <ellipse cx="37" cy="31" rx="5" ry="3" fill="#f4a0a0" opacity="0.55"/>
+        <ellipse cx="63" cy="31" rx="5" ry="3" fill="#f4a0a0" opacity="0.55"/>
+        <path d="M43 32 Q50 39 57 32" fill="none" stroke="#b06060" stroke-width="2" stroke-linecap="round"/>
+        <rect x="44" y="45" width="12" height="7" fill="#FDBCB4"/>
+        <path d="M22 88 L22 54 Q22 52 25 51 L38 48 L50 53 L62 48 L75 51 Q78 52 78 54 L78 88 Q78 90 75 90 L25 90 Q22 90 22 88Z" fill="#2a7de1"/>
+        <path d="M38 49 L50 56 L62 49" fill="none" stroke="white" stroke-width="2"/>
+      </svg>
+      </div>
+
+      <!-- Menino "saindo" do círculo: máscara = disco ∪ faixa superior (cabeça + varinha pra fora) -->
+      <img
+        src="img/personagem_alfabeto.png"
+        alt="Menino"
+        style="
+          position:absolute; width:420px; height:auto; max-width:none;
+          left:-121px; top:8px; pointer-events:none;
+          -webkit-mask:
+            radial-gradient(circle 88px at 211px 127px, #000 100%, rgba(0,0,0,0) 100%),
+            linear-gradient(#000, #000);
+          -webkit-mask-size:auto, 90px 92px;
+          -webkit-mask-position:0 0, 166px 0;
+          -webkit-mask-repeat:no-repeat,no-repeat;
+          mask:
+            radial-gradient(circle 88px at 211px 127px, #000 100%, rgba(0,0,0,0) 100%),
+            linear-gradient(#000, #000);
+          mask-size:auto, 90px 92px;
+          mask-position:0 0, 166px 0;
+          mask-repeat:no-repeat,no-repeat;
+        "
+        onerror="this.style.display='none';document.getElementById('menino-rosto').style.display='block';"
+      />
+    </div>
+  </div>
+
+  <!-- Área da atividade -->
+  <div class="glass rounded-3xl p-6 flex flex-col items-center gap-6 w-full max-w-md shadow-xl">
+
+    <!-- Card -->
+    <div
+      id="activity-card"
+      style="
+        background:#fff; border:4px solid #0058bd;
+        border-radius:20px; box-shadow:0 10px 0 0 #0058bd;
+        padding:16px; width:100%;
+        display:flex; flex-direction:column; align-items:center;
+        transition:border-color 0.3s, box-shadow 0.3s;
+      "
+    >
+      <div style="position:relative; width:100%; aspect-ratio:1; margin-bottom:12px;">
+        <img
+          id="word-image" src="" alt="Imagem da palavra"
+          style="
+            width:100%; height:100%; object-fit:cover;
+            border-radius:12px; border:3px solid #dee1ff; background:#ececff;
+          "
+        />
+        <button
+          onclick="replayWordAudio()"
+          style="
+            position:absolute; bottom:10px; right:10px;
+            background:#0058bd; color:#fff; border:none;
+            border-radius:9999px; width:40px; height:40px;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,0.25);
+            transition:transform 0.1s;
+          "
+          onmouseenter="this.style.transform='scale(1.1)'"
+          onmouseleave="this.style.transform='scale(1)'"
+        >
+          <span class="material-symbols-outlined" style="font-size:20px;">volume_up</span>
+        </button>
+      </div>
+      <h2
+        id="word-text"
+        style="
+          font-size:40px; font-weight:700; color:#001159;
+          font-family:'Quicksand',sans-serif; text-transform:lowercase;
+          letter-spacing:-0.01em;
+        "
+      >&nbsp;</h2>
+    </div>
+
+    <!-- Botões de letra -->
+    <div id="options-container" style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;"></div>
+
+  </div>
+</main>
+
+</div><!-- /#game-screen -->
+
+<!-- ── Tela final ───────────────────────────────────────────────────────────── -->
+<div id="end-screen" class="hidden">
+  <div class="glass rounded-3xl p-10 flex flex-col items-center gap-6 text-center shadow-2xl"
+       style="max-width:400px; border:4px solid #fcbc05; box-shadow:0 12px 0 0 #7a5900;">
+    <div style="font-size:72px;">🎉</div>
+    <h2 style="font-size:36px;font-weight:700;color:#001159;font-family:'Quicksand',sans-serif;">Parabéns!</h2>
+    <p id="final-score-text" style="font-size:20px;font-weight:600;color:#001159;font-family:'Quicksand',sans-serif;"></p>
+    <button
+      onclick="startGame()"
+      style="
+        background:#fcbc05; border:4px solid #7a5900;
+        border-radius:9999px; padding:16px 40px;
+        font-size:22px; font-weight:700; color:#6b4e00;
+        font-family:'Quicksand',sans-serif;
+        box-shadow:0 8px 0 0 #7a5900; cursor:pointer;
+        transition:transform 0.1s, box-shadow 0.1s;
+      "
+      onmouseenter="this.style.transform='scale(1.05)'"
+      onmouseleave="this.style.transform='scale(1)'"
+      onmousedown="this.style.boxShadow='0 0px 0 0 #7a5900';this.style.transform='translateY(8px)'"
+      onmouseup="this.style.boxShadow='0 8px 0 0 #7a5900';this.style.transform='scale(1)'"
+    >Jogar Novamente</button>
+    <button
+      onclick="showMenu()"
+      style="
+        background:#0058bd; border:4px solid #00337a;
+        border-radius:9999px; padding:12px 32px;
+        font-size:18px; font-weight:700; color:#fff;
+        font-family:'Quicksand',sans-serif;
+        box-shadow:0 6px 0 0 #00337a; cursor:pointer;
+        transition:transform 0.1s, box-shadow 0.1s;
+      "
+      onmouseenter="this.style.transform='scale(1.05)'"
+      onmouseleave="this.style.transform='scale(1)'"
+      onmousedown="this.style.boxShadow='0 0px 0 0 #00337a';this.style.transform='translateY(6px)'"
+      onmouseup="this.style.boxShadow='0 6px 0 0 #00337a';this.style.transform='scale(1)'"
+    >Voltar ao menu</button>
+  </div>
+</div>
+
+<!-- ── Overlay do enunciado ──────────────────────────────────────────────────── -->
+<div id="speech-overlay" style="position:fixed;inset:0;z-index:999;background:rgba(0,17,89,0.65);display:none;align-items:center;justify-content:center;">
+  <div style="background:#ffffff;border:4px solid #0058bd;border-radius:20px;padding:32px 40px;box-shadow:0 8px 0 0 #0058bd;font-size:24px;font-weight:700;color:#0058bd;text-align:center;font-family:'Quicksand',sans-serif;max-width:320px;line-height:1.5;">
+    Seleciona a letra inicial da palavra!
+  </div>
+</div>
+
+<script>
+// ─── Lista de imagens ─────────────────────────────────────────────────────────
+const ALL_IMAGES = [
+  // A (157)
+  "abacate.jpg","abacate2.jpg","abacaxi.jpg","abacaxi2.jpg","abaixa_lingua.jpg",
+  "abajur2.jpg","abelha.jpg","abelha2.jpg","abelhas2.jpg","abobora.jpg",
+  "abobora2.jpg","abraco2.jpg","abril.jpg","abrir2.jpg","acacia.jpg",
+  "academia.jpg","acai.jpg","acenar2.jpg","acender2.jpg","acerola.jpg",
+  "acordar2.jpg","acougue2.jpg","acrobata2.jpg","acucar2.jpg","acucareiro2.jpg",
+  "adulto2.jpg","adultos2.jpg","aeroporto2.jpg","afundar2.jpg","agosto.jpg",
+  "agriao.jpg","agua2.jpg","aguape.jpg","aguaviva2.jpg","aguia_cinzenta.jpg",
+  "aguia2.jpg","agulha2.jpg","aipo.jpg","ajuda2.jpg","alaranjado.jpg",
+  "albatroz.jpg","albatroz_real.jpg","album2.jpg","alca2.jpg","alce.jpg",
+  "aldeia2.jpg","alecrim2.jpg","alema.jpg","alerta.jpg","alfabeto2.jpg",
+  "alface_dagua.jpg","alface2.jpg","alfavaca.jpg","alfinete2.jpg","alga2.jpg",
+  "algas.jpg","algema2.jpg","algemas2.jpg","algodao2.jpg","alho.jpg",
+  "alicate2.jpg","alice.jpg","alimento2.jpg","alimentos2.jpg","almoco.jpg",
+  "almondega.jpg","alossauro.jpg","altofalante2.jpg","alvo2.jpg","amarelinha.jpg",
+  "amarelo2.jpg","amazonsaurus.jpg","ambulancia2.jpg","amendoim2.jpg","amigo2.jpg",
+  "amigos2.jpg","amor_perfeito.jpg","amor2.jpg","amora.jpg","ana_da_esquina.jpg",
+  "anao.jpg","anchova.jpg","ancora2.jpg","andar2.jpg","andorinha2.jpg",
+  "androide2.jpg","anel2.jpg","animais2.jpg","animal2.jpg","aniversario2.jpg",
+  "anoes.jpg","anos2.jpg","anta_cachorro.jpg","anta2.jpg","antilope.jpg",
+  "anzol2.jpg","apagar2.jpg","apartamento2.jpg","apartamentos2.jpg","apatossauro.jpg",
+  "apito2.jpg","aquario2.jpg","aquecer2.jpg","ar2.jpg","arames.jpg",
+  "aranha.jpg","aranha2.jpg","arara.jpg","arara_azul.jpg","arara_caninde.jpg",
+  "arara2.jpg","ararajuba.jpg","ararinha_azul.jpg","arbusto2.jpg","arco2.jpg",
+  "arcoiris2.jpg","areia2.jpg","argila.jpg","ariranha.jpg","armadilha2.jpg",
+  "armador.jpg","armazem2.jpg","armazens2.jpg","aro2.jpg","arpao2.jpg",
+  "arquiteto.jpg","arquivo2.jpg","arraia.jpg","arroz2.jpg","arruda.jpg",
+  "artesao2.jpg","arvore2.jpg","arvores2.jpg","asa2.jpg","asinhas.jpg",
+  "asinhas2.jpg","assar2.jpg","assento2.jpg","astronauta2.jpg","atleta2.jpg",
+  "ator2.jpg","atum.jpg","auto_escola.jpg","autodromo2.jpg","ave2.jpg",
+  "avental2.jpg","aves2.jpg","avestruz2.jpg","aviao.jpg","aviao2.jpg",
+  "aviaozinho.jpg","aviario.jpg","avo.jpg","azaleia.jpg","azeite2.jpg",
+  "azul2.jpg","azulejo.jpg",
+  // E (94)
+  "eclipse2.jpg","edificio2.jpg","egua.jpg","elastico2.jpg","elefante.jpg",
+  "elefante2.jpg","eletricista.jpg","elevador2.jpg","elfos.jpg","ema2.jpg",
+  "email2.jpg","emas2.jpg","embauba.jpg","emilia.jpg","empada2.jpg",
+  "empurrar2.jpg","encanador.jpg","encapo.jpg","encolher2.jpg","enfermeiro2.jpg",
+  "engenheiro.jpg","enterrar2.jpg","envelope2.jpg","enxada2.jpg","erva_cidreira.jpg",
+  "escada2.jpg","escama2.jpg","escamas2.jpg","escapo.jpg","escaravelho2.jpg",
+  "escola2.jpg","esconde_esconde.jpg","escorpiao.jpg","escorpiao2.jpg","escorregador2.jpg",
+  "escoteiro2.jpg","escoteiros2.jpg","escova_de_cabelo.jpg","escova_de_dente.jpg","escova2.jpg",
+  "escovas2.jpg","escrever2.jpg","escudo2.jpg","escultura2.jpg","escuridao.jpg",
+  "esfera2.jpg","esfiapo.jpg","esmalte2.jpg","esmeralda2.jpg","espada2.jpg",
+  "espaguete.jpg","espalhar2.jpg","espantalho.jpg","espantalho2.jpg","esparadrapo2.jpg",
+  "espatula.jpg","espelho2.jpg","espetinho.jpg","espiga.jpg","espiga2.jpg",
+  "espinafre2.jpg","espinha2.jpg","espinho2.jpg","espinhos2.jpg","espinossauro.jpg",
+  "espiral2.jpg","espirro.jpg","esponja2.jpg","esporte2.jpg","espremer2.jpg",
+  "espuma2.jpg","esqueleto2.jpg","esqui_aquatico.jpg","esquilo2.jpg","esquimo.jpg",
+  "esquimo2.jpg","esquina2.jpg","estante2.jpg","estantes2.jpg","estatua.jpg",
+  "estegossauro.jpg","estetoscopio.jpg","estevia.jpg","estojo2.jpg","estourar2.jpg",
+  "estrada2.jpg","estrela.jpg","estrela_do_mar.jpg","estrela2.jpg","estreladomar.jpg",
+  "etiqueta2.jpg","eucalipto.jpg","explosao.jpg","extintor2.jpg",
+  // I (22)
+  "iara.jpg","iate.jpg","ideia2.jpg","iglu2.jpg","igreja2.jpg",
+  "igrejas2.jpg","indigena.jpg","indio.jpg","indio2.jpg","inseto2.jpg",
+  "instrumento2.jpg","instrumentos2.jpg","interruptor2.jpg","inundar2.jpg","inverno2.jpg",
+  "iogurte.jpg","ioio2.jpg","Irere.jpg","iris.jpg","irma.jpg",
+  "irmao2.jpg","isca2.jpg",
+  // O (43)
+  "oasis2.jpg","obelisco2.jpg","oboe.jpg","obraprima2.jpg","oca2.jpg",
+  "ocas2.jpg","oceano2.jpg","ocre.jpg","oculos2.jpg","oficina.jpg",
+  "oleo2.jpg","olho2.jpg","olhos2.jpg","ombro2.jpg","onca_boi.jpg",
+  "onca_parda.jpg","onca_pintada.jpg","onca_preta.jpg","onca2.jpg","onda2.jpg",
+  "ondas2.jpg","onibus2.jpg","orangotango.jpg","orca.jpg","orelha2.jpg",
+  "orelhas2.jpg","orquidea.jpg","osso2.jpg","ossos2.jpg","ostra2.jpg",
+  "otoscopio.jpg","ourico_do_mar.jpg","ourico_preto.jpg","ourico2.jpg","ouro2.jpg",
+  "outono2.jpg","outubro.jpg","oval2.jpg","ovelha.jpg","ovelha2.jpg",
+  "ovelhas2.jpg","ovo2.jpg","ovos2.jpg",
+  // U (14)
+  "uirapuru.jpg","umbigo2.jpg","unaysaurus.jpg","unha2.jpg","unhas2.jpg",
+  "unicornio2.jpg","uniforme2.jpg","universo2.jpg","urso_de_pelucia.jpg","urso2.jpg",
+  "urubu_rei.jpg","urubu2.jpg","utensilio2.jpg","utensilios2.jpg"
+];
+
+// ─── Grafia correta (acentos, ç, hífens) — só os casos que diferem do nome do arquivo ──
+// Default = nome base com "_" → espaço. Aqui ficam só as correções ortográficas.
+const SPELLING = {
+  abaixa_lingua:"abaixa-língua", abobora:"abóbora", abraco:"abraço", acacia:"acácia",
+  acai:"açaí", acougue:"açougue", acucar:"açúcar", acucareiro:"açucareiro",
+  agriao:"agrião", agua:"água", aguape:"aguapé", aguaviva:"água-viva", aguia:"águia",
+  aguia_cinzenta:"águia-cinzenta", albatroz_real:"albatroz-real", album:"álbum",
+  alca:"alça", alema:"alemã", alface_dagua:"alface-d'água", algodao:"algodão",
+  almoco:"almoço", almondega:"almôndega", altofalante:"alto-falante",
+  ambulancia:"ambulância", amor_perfeito:"amor-perfeito", anao:"anão", ancora:"âncora",
+  aniversario:"aniversário", anoes:"anões", antilope:"antílope", aquario:"aquário",
+  arara_azul:"arara-azul", arara_caninde:"arara-canindé", ararinha_azul:"ararinha-azul",
+  arcoiris:"arco-íris", armazem:"armazém", armazens:"armazéns", arpao:"arpão",
+  artesao:"artesão", arvore:"árvore", arvores:"árvores", auto_escola:"autoescola",
+  autodromo:"autódromo", aviao:"avião", aviaozinho:"aviãozinho", aviario:"aviário",
+  avo:"avô", edificio:"edifício", egua:"égua", elastico:"elástico", email:"e-mail",
+  embauba:"embaúba", emilia:"emília", erva_cidreira:"erva-cidreira",
+  esconde_esconde:"esconde-esconde", escorpiao:"escorpião", escuridao:"escuridão",
+  espatula:"espátula", esqui_aquatico:"esqui aquático", esquimo:"esquimó",
+  estatua:"estátua", estetoscopio:"estetoscópio", estevia:"estévia",
+  estrela_do_mar:"estrela-do-mar", explosao:"explosão", indigena:"indígena",
+  indio:"índio", ioio:"ioiô", irere:"irerê", iris:"íris", irma:"irmã", irmao:"irmão",
+  oasis:"oásis", oboe:"oboé", obraprima:"obra-prima", oculos:"óculos", oleo:"óleo",
+  onca:"onça", onca_boi:"onça-boi", onca_parda:"onça-parda", onca_pintada:"onça-pintada",
+  onca_preta:"onça-preta", onibus:"ônibus", orquidea:"orquídea", otoscopio:"otoscópio",
+  ourico:"ouriço", ourico_do_mar:"ouriço-do-mar", ourico_preto:"ouriço-preto",
+  unicornio:"unicórnio", urso_de_pelucia:"urso de pelúcia", urubu_rei:"urubu-rei",
+  utensilio:"utensílio", utensilios:"utensílios"
+};
+
+// Palavras sem áudio em audio/<base>.mp3 — não entram no jogo.
+// Regerar quando adicionar/remover áudios.
+const MISSING_AUDIO = new Set(['androide','enterrar','espinossauro','estreladomar','oficina']);
+
+function parseWord(filename) {
+  const noExt  = filename.replace(/\.jpg$/i, '');
+  const base   = noExt.replace(/\d+$/, '').toLowerCase();
+  return {
+    filename,
+    imagePath:   `img/${filename}`,
+    baseName:    base,
+    displayWord: SPELLING[base] || base.replace(/_/g, ' '),
+    vowel:       base[0].toUpperCase()
+  };
+}
+
+const WORDS  = ALL_IMAGES.map(parseWord).filter(w => !MISSING_AUDIO.has(w.baseName));
+const VOWELS = ['A','E','I','O','U'];
+const ROUND_SIZE = 20;
+
+// ─── Estado ───────────────────────────────────────────────────────────────────
+let deck          = [];
+let currentIndex  = 0;
+let score         = 0;
+let wrongCount    = 0;
+let answerLocked  = false;
+let currentWord   = null;
+let enunciadoDone = false;   // enunciado toca somente uma vez
+
+// ─── Embaralhamento ───────────────────────────────────────────────────────────
+function shuffleNoConsecutive(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  for (let i = 1; i < a.length; i++) {
+    if (a[i].vowel === a[i-1].vowel) {
+      for (let j = i + 1; j < a.length; j++) {
+        if (a[j].vowel !== a[i-1].vowel) { [a[i], a[j]] = [a[j], a[i]]; break; }
+      }
+    }
+  }
+  return a;
+}
+
+// ─── Áudio ────────────────────────────────────────────────────────────────────
+const synth = window.speechSynthesis;
+let voices  = [];
+let audioCtx = null;
+
+synth.onvoiceschanged = () => { voices = synth.getVoices(); };
+voices = synth.getVoices();
+
+function initAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function speakText(text, onEnd, onStart) {
+  synth.cancel();
+  const utt    = new SpeechSynthesisUtterance(text);
+  utt.lang     = 'pt-BR';
+  utt.pitch    = 1.15;
+  utt.rate     = 0.88;
+  if (onEnd)   utt.onend   = onEnd;
+  if (onStart) utt.onstart = onStart;
+  const ptVoice = voices.find(v => v.lang.startsWith('pt'));
+  if (ptVoice) utt.voice = ptVoice;
+  synth.speak(utt);
+}
+
+function playWordAudio(word, onEnd) {
+  const mp3    = new Audio(`audio/${word.baseName}.mp3`);
+  mp3.onended  = onEnd || null;
+  mp3.onerror  = () => speakText(word.displayWord, onEnd);
+  mp3.play().catch(() => speakText(word.displayWord, onEnd));
+}
+
+function playRoundIntro(word) {
+  // Rodadas seguintes já rolam após um gesto → áudio destravado.
+  if (enunciadoDone) {
+    playWordAudio(word, () => setButtonsEnabled(true));
+    return;
+  }
+
+  // 1ª rodada: autoplay pode estar bloqueado pelo navegador (sem gesto ainda).
+  // Três caminhos convergem em proceed(), que roda a cadeia uma única vez:
+  //   a) enunciado tocou de fato → onend                (com áudio)
+  //   b) 1º gesto resgata o autoplay bloqueado          (com áudio)
+  //   c) timeout de segurança (bloqueado e sem gesto)   (em silêncio)
+  let proceeded = false;
+  let started   = false;
+  let timer     = null;
+  const overlay = document.getElementById('speech-overlay');
+
+  function cleanup() {
+    clearTimeout(timer);
+    document.removeEventListener('pointerdown', rescue, true);
+    document.removeEventListener('keydown', rescue, true);
+  }
+
+  function proceed(withWord) {
+    if (proceeded) return;
+    proceeded = true;
+    cleanup();
+    enunciadoDone = true;
+    overlay.style.display = 'none';
+    if (withWord) setTimeout(() => playWordAudio(word, () => setButtonsEnabled(true)), 280);
+    else          setButtonsEnabled(true);   // fallback mudo; replay toca depois
+  }
+
+  function startEnunciado() {
+    speakText(
+      'Seleciona a letra inicial da palavra',
+      () => proceed(true),          // onEnd  → toca a palavra, depois habilita
+      () => { started = true; }     // onStart → autoplay realmente começou
+    );
+  }
+
+  function rescue() {
+    if (proceeded || started) return;   // autoplay já tocando → ignora gesto
+    clearTimeout(timer);
+    startEnunciado();                   // gesto destrava o áudio
+    timer = setTimeout(() => proceed(false), 4500);
+  }
+
+  document.addEventListener('pointerdown', rescue, true);
+  document.addEventListener('keydown', rescue, true);
+
+  startEnunciado();                          // tenta autoplay
+  timer = setTimeout(() => proceed(false), 4500);  // rede de segurança
+}
+
+function setButtonsEnabled(enabled) {
+  document.querySelectorAll('#options-container .btn-letter').forEach(btn => {
+    btn.disabled = !enabled;
+    btn.style.opacity = enabled ? '1' : '0.5';
+    btn.style.cursor = enabled ? 'pointer' : 'not-allowed';
+  });
+}
+
+function replayWordAudio() {
+  if (currentWord) playWordAudio(currentWord, () => setButtonsEnabled(true));
+}
+
+function playSuccessSound() {
+  initAudioCtx();
+  [523, 659, 784].forEach((freq, i) => {
+    const osc  = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    osc.type = 'sine'; osc.frequency.value = freq;
+    const t = audioCtx.currentTime + i * 0.14;
+    gain.gain.setValueAtTime(0.28, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.32);
+    osc.start(t); osc.stop(t + 0.35);
+  });
+}
+
+function playErrorSound() {
+  initAudioCtx();
+  const osc  = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.type = 'sawtooth'; osc.frequency.value = 220;
+  gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+  osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 0.48);
+}
+
+// ─── Confetti ─────────────────────────────────────────────────────────────────
+function spawnConfetti() {
+  const colors = ['#0058bd','#fcbc05','#84fe58','#ba1a1a','#ff9f1c'];
+  for (let i = 0; i < 35; i++) {
+    const el = document.createElement('div');
+    Object.assign(el.style, {
+      position:'fixed', width:'10px', height:'10px',
+      backgroundColor: colors[Math.floor(Math.random() * colors.length)],
+      left: Math.random() * 100 + 'vw', top: '-12px',
+      zIndex:'9999', borderRadius: Math.random() > 0.5 ? '50%' : '3px',
+      pointerEvents:'none',
+    });
+    document.body.appendChild(el);
+    const dur = 1200 + Math.random() * 1000;
+    el.animate([
+      { transform:'translate3d(0,0,0) rotate(0deg)', opacity:1 },
+      { transform:`translate3d(${(Math.random()-0.5)*120}px,${window.innerHeight+20}px,0) rotate(${Math.random()*400}deg)`, opacity:0 }
+    ], { duration:dur, easing:'cubic-bezier(.37,0,.63,1)', fill:'forwards' });
+    setTimeout(() => el.remove(), dur);
+  }
+}
+
+// ─── Rodada ───────────────────────────────────────────────────────────────────
+function loadRound(index) {
+  if (!inGame) return;            // saiu para o menu: aborta a rodada pendente
+  currentWord  = deck[index];
+  wrongCount   = 0;
+  answerLocked = false;
+
+  // Reset card
+  const card = document.getElementById('activity-card');
+  card.style.borderColor = '#0058bd';
+  card.style.boxShadow   = '0 10px 0 0 #0058bd';
+  card.classList.remove('animate-bounce-once');
+
+  document.getElementById('word-image').src = currentWord.imagePath;
+  document.getElementById('word-image').alt = currentWord.displayWord;
+  document.getElementById('word-text').textContent = currentWord.displayWord;
+  document.getElementById('progress-text').textContent = `${index + 1} / ${deck.length}`;
+
+  // Gerar botões
+  const container  = document.getElementById('options-container');
+  container.innerHTML = '';
+  const dist = VOWELS.filter(v => v !== currentWord.vowel).sort(() => Math.random() - 0.5).slice(0, 2);
+  const opts = [currentWord.vowel, ...dist].sort(() => Math.random() - 0.5);
+
+  opts.forEach(letter => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-letter';
+    btn.textContent = letter;
+    btn.dataset.letter = letter;
+    btn.addEventListener('click', () => handleGuess(letter, currentWord.vowel, btn));
+    container.appendChild(btn);
+  });
+
+  setButtonsEnabled(false);
+  // Áudio
+  setTimeout(() => playRoundIntro(currentWord), 400);
+}
+
+function handleGuess(letter, correct, btnEl) {
+  if (answerLocked) return;
+  initAudioCtx();
+
+  if (letter === correct) {
+    answerLocked = true;
+    score++;
+    btnEl.classList.add('correct', 'animate-pop');
+    playSuccessSound();
+    spawnConfetti();
+
+    const card = document.getElementById('activity-card');
+    card.style.borderColor = '#298600';
+    card.style.boxShadow   = '0 10px 0 0 #298600';
+    setTimeout(() => card.classList.add('animate-bounce-once'), 50);
+    setTimeout(() => playWordAudio(currentWord), 600);
+    setTimeout(advanceRound, 2200);
+
+  } else {
+    wrongCount++;
+    btnEl.classList.add('wrong', 'animate-shake');
+    playErrorSound();
+    setTimeout(() => btnEl.classList.remove('animate-shake'), 450);
+
+    if (wrongCount >= 2) {
+      answerLocked = true;
+      document.querySelectorAll('#options-container .btn-letter').forEach(b => {
+        if (b.dataset.letter === correct)
+          b.classList.add('correct', 'animate-glow-correct');
+      });
+      setTimeout(() => playWordAudio(currentWord), 500);
+      setTimeout(advanceRound, 2700);
+    }
+  }
+}
+
+function advanceRound() {
+  currentIndex++;
+  if (currentIndex >= deck.length) showEndScreen();
+  else loadRound(currentIndex);
+}
+
+// ─── Tela final ───────────────────────────────────────────────────────────────
+function showEndScreen() {
+  document.getElementById('final-score-text').innerHTML =
+    `Você acertou <strong>${score}</strong> de <strong>${deck.length}</strong> palavras!`;
+  document.getElementById('end-screen').classList.remove('hidden');
+  spawnConfetti();
+  setTimeout(spawnConfetti, 600);
+}
+
+// ─── Iniciar ──────────────────────────────────────────────────────────────────
+function startGame() {
+  inGame = true;
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById('speech-overlay').style.display = 'flex';
+  enunciadoDone = false;
+
+  deck         = shuffleNoConsecutive(WORDS).slice(0, ROUND_SIZE);
+  currentIndex = 0;
+  score        = 0;
+  loadRound(0);
+}
+
+// ─── Navegação de telas ─────────────────────────────────────────────────────────
+let inGame = false;
+
+function showMenu() {
+  inGame = false;
+  synth.cancel();
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('end-screen').classList.add('hidden');
+  document.getElementById('speech-overlay').style.display = 'none';
+  document.getElementById('menu-screen').style.display = '';
+}
+
+function selectVowels() {
+  inGame = true;
+  document.getElementById('menu-screen').style.display = 'none';
+  document.getElementById('game-screen').style.display = '';
+  startGame();
+}
+
+// ─── Fundo (liga/desliga imagem) ───────────────────────────────────────────────
+let bgOn = false;   // default: inicia sem imagem de fundo
+const BG_IMAGE   = "url('stitch_game_design_concepts/playful_and_colorful_forest_background_for_a_children_s_educational_game/screen.png')";
+const BG_NEUTRAL = "#dee1ff";
+
+function applyBackground() {
+  document.body.style.backgroundImage = bgOn ? BG_IMAGE : 'none';
+  document.body.style.backgroundColor = bgOn ? '' : BG_NEUTRAL;
+  document.querySelectorAll('.bg-toggle-btn').forEach(btn => {
+    const icon = btn.querySelector('.material-symbols-outlined');
+    if (icon) icon.textContent = bgOn ? 'image' : 'hide_image';
+    btn.title = bgOn ? 'Ocultar imagem de fundo' : 'Mostrar imagem de fundo';
+  });
+}
+
+function toggleBackground() { bgOn = !bgOn; applyBackground(); }
+
+// ─── Teclado ──────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  const key = e.key.toUpperCase();
+  if (VOWELS.includes(key)) {
+    const btn = document.querySelector(`#options-container [data-letter="${key}"]`);
+    if (btn) btn.click();
+  }
+});
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.body.addEventListener('click', () => initAudioCtx(), { once: true });
+  applyBackground();   // default: sem imagem de fundo
+  showMenu();          // inicia na tela de seleção
+});
+</script>
+</body>
+</html>
