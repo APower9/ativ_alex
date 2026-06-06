@@ -592,7 +592,8 @@ const ROUND_SIZE = 20;
 // ─── Atividade F e V ───────────────────────────────────────────────────────────
 // Palavras curadas (concretas, infantis). Cada baseName tem áudio em audio/<base>.mp3.
 // Sem imagens em img/ → mostram o placeholder; se uma foto for adicionada depois
-// (img/<base>.jpg), ela aparece automaticamente. [base, grafia].
+// (img/<base>.jpg|jpeg|png|webp, com ou sem sufixo "2"), aparece automaticamente.
+// Ver fvCandidates(). [base, grafia].
 const FV_RAW = {
   F: [
     ["faca","faca"],["fada","fada"],["faixa","faixa"],["falcao","falcão"],
@@ -621,8 +622,19 @@ const FV_RAW = {
   ]
 };
 
+// Como ainda não há um inventário fixo das imagens de F/V, geramos os nomes
+// prováveis: <base> e <base>2, em jpg/jpeg/png/webp. O loadRound tenta cada um
+// e cai no placeholder só quando todos falham.
+function fvCandidates(base) {
+  const list = [];
+  for (const suf of ['', '2'])
+    for (const ext of ['jpg', 'jpeg', 'png', 'webp'])
+      list.push(`img/${base}${suf}.${ext}`);
+  return list;
+}
+
 function makeWord(base, display, letter) {
-  return { baseName: base, displayWord: display, vowel: letter, imagePath: `img/${base}.jpg` };
+  return { baseName: base, displayWord: display, vowel: letter, imageCandidates: fvCandidates(base) };
 }
 
 const FV_WORDS = [
@@ -863,10 +875,17 @@ function loadRound(index) {
 
   const wimg = document.getElementById('word-image');
   const wph  = document.getElementById('word-placeholder');
-  wimg.onload  = () => { wimg.style.display = '';     wph.style.display = 'none'; };
-  wimg.onerror = () => { wimg.style.display = 'none'; wph.style.display = 'flex'; };
+  // Tenta cada candidato de imagem em ordem; só mostra o placeholder no fim.
+  const candidates = currentWord.imageCandidates || [currentWord.imagePath];
+  let ci = 0;
+  const tryNext = () => {
+    if (ci >= candidates.length) { wimg.style.display = 'none'; wph.style.display = 'flex'; return; }
+    wimg.src = candidates[ci++];
+  };
+  wimg.onload  = () => { wimg.style.display = ''; wph.style.display = 'none'; };
+  wimg.onerror = tryNext;
   wimg.alt = currentWord.displayWord;
-  wimg.src = currentWord.imagePath;
+  tryNext();
   document.getElementById('word-text').textContent = currentWord.displayWord;
   document.getElementById('progress-text').textContent = `${index + 1} / ${deck.length}`;
 
