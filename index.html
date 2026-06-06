@@ -647,6 +647,11 @@ const ACTIVITIES = {
   vowels: {
     title:     'Aventuras das Vogais',
     character: 'img/personagem_alfabeto.png',
+    charStyle: {
+      width:'420px', left:'-121px', top:'8px',
+      mask:'radial-gradient(circle 88px at 211px 127px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 90px 92px', maskPosition:'0 0, 166px 0', maskRepeat:'no-repeat,no-repeat'
+    },
     keys:      VOWELS,
     buildDeck() { return shuffleNoConsecutive(WORDS).slice(0, ROUND_SIZE); },
     buildOptions(correct) {
@@ -657,6 +662,13 @@ const ACTIVITIES = {
   fv: {
     title:     'Aventuras do F e V',
     character: 'img/personagem_alfabeto1.png',
+    // Personagem de corpo inteiro (mais estreita que o menino): ampliada para
+    // preencher o disco e recentrada no rosto, com o cabelo dentro do disco.
+    charStyle: {
+      width:'470px', left:'-139px', top:'10px',
+      mask:'radial-gradient(circle 88px at 229px 125px, #000 100%, rgba(0,0,0,0) 100%)',
+      maskSize:'auto', maskPosition:'0 0', maskRepeat:'no-repeat'
+    },
     keys:      ['F','V'],
     buildDeck() {
       const f = pickN(FV_WORDS.filter(w => w.vowel === 'F'), 10);
@@ -962,10 +974,20 @@ function showMenu() {
   document.getElementById('menu-screen').style.display = '';
 }
 
+function applyCharStyle(img, s) {
+  Object.assign(img.style, {
+    width:s.width, left:s.left, top:s.top,
+    mask:s.mask, maskSize:s.maskSize, maskPosition:s.maskPosition, maskRepeat:s.maskRepeat,
+    WebkitMask:s.mask, WebkitMaskSize:s.maskSize, WebkitMaskPosition:s.maskPosition, WebkitMaskRepeat:s.maskRepeat
+  });
+}
+
 function selectActivity(activity) {
   currentActivity = activity;
   document.getElementById('game-title').textContent = activity.title;
-  document.getElementById('character-img').src = activity.character;
+  const charImg = document.getElementById('character-img');
+  charImg.src = activity.character;
+  applyCharStyle(charImg, activity.charStyle);
   inGame = true;
   document.getElementById('menu-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = '';
