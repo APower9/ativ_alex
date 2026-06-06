@@ -630,16 +630,6 @@ const FV_WORDS = [
   ...FV_RAW.V.map(([b,d]) => makeWord(b, d, 'V'))
 ];
 
-// Sorteia n elementos aleatórios de arr.
-function pickN(arr, n) {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a.slice(0, n);
-}
-
 const DISTRACTORS = ['B','C','D','G','J','L','M','N','P','R','S','T','Z'];
 
 // ─── Configuração das atividades ────────────────────────────────────────────────
@@ -662,18 +652,19 @@ const ACTIVITIES = {
   fv: {
     title:     'Aventuras do F e V',
     character: 'img/personagem_alfabeto1.png',
-    // Personagem de corpo inteiro (mais estreita que o menino): ampliada para
-    // preencher o disco e recentrada no rosto, com o cabelo dentro do disco.
+    // Personagem de corpo inteiro (mais estreita que o menino): ampliada e
+    // recentrada no rosto. Igual ao menino, uma faixa extra deixa o cabelo
+    // "saltar" para fora do disco, no topo.
     charStyle: {
       width:'470px', left:'-139px', top:'10px',
-      mask:'radial-gradient(circle 88px at 229px 125px, #000 100%, rgba(0,0,0,0) 100%)',
-      maskSize:'auto', maskPosition:'0 0', maskRepeat:'no-repeat'
+      mask:'radial-gradient(circle 88px at 229px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
     },
     keys:      ['F','V'],
     buildDeck() {
-      const f = pickN(FV_WORDS.filter(w => w.vowel === 'F'), 10);
-      const v = pickN(FV_WORDS.filter(w => w.vowel === 'V'), 10);
-      return shuffleNoConsecutive([...f, ...v]);
+      // Todas as palavras de F e V disponíveis (embaralhadas, sem repetir letra
+      // em sequência), não apenas uma amostra.
+      return shuffleNoConsecutive([...FV_WORDS]);
     },
     buildOptions(correct) {
       const other = correct === 'F' ? 'V' : 'F';
