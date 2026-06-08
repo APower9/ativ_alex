@@ -214,12 +214,57 @@
         <span class="tile-label">f e v</span>
       </button>
 
-      <!-- 7 placeholders -->
-      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
-      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
-      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
-      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
-      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
+      <!-- Atividade ativa: M e N -->
+      <button class="tile tile-active" onclick="selectMN()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#e8423a">M</span><span style="color:#8b3fc0">N</span>
+          </div>
+        </div>
+        <span class="tile-label">m e n</span>
+      </button>
+
+      <!-- Atividade ativa: L -->
+      <button class="tile tile-active" onclick="selectL()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#f59e0b">L</span>
+          </div>
+        </div>
+        <span class="tile-label">l</span>
+      </button>
+
+      <!-- Atividade ativa: S e Z -->
+      <button class="tile tile-active" onclick="selectSZ()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#0058bd">S</span><span style="color:#2bb24c">Z</span>
+          </div>
+        </div>
+        <span class="tile-label">s e z</span>
+      </button>
+
+      <!-- Atividade ativa: R forte -->
+      <button class="tile tile-active" onclick="selectR()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#e8423a">R</span>
+          </div>
+        </div>
+        <span class="tile-label">r forte</span>
+      </button>
+
+      <!-- Atividade ativa: J -->
+      <button class="tile tile-active" onclick="selectJ()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#8b3fc0">J</span>
+          </div>
+        </div>
+        <span class="tile-label">j</span>
+      </button>
+
+      <!-- 2 placeholders -->
       <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
       <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
     </div>
@@ -589,12 +634,12 @@ const WORDS  = ALL_IMAGES.map(parseWord).filter(w => !MISSING_AUDIO.has(w.baseNa
 const VOWELS = ['A','E','I','O','U'];
 const ROUND_SIZE = 20;
 
-// ─── Atividade F e V ───────────────────────────────────────────────────────────
+// ─── Atividades de letra inicial ────────────────────────────────────────────────
 // Palavras curadas (concretas, infantis). Cada baseName tem áudio em audio/<base>.mp3.
 // Sem imagens em img/ → mostram o placeholder; se uma foto for adicionada depois
 // (img/<base>.jpg|jpeg|png|webp, com ou sem sufixo "2"), aparece automaticamente.
-// Ver fvCandidates(). [base, grafia].
-const FV_RAW = {
+// Ver wordImageCandidates(). Cada grupo: { LETRA: [[base, grafia], ...] }.
+const GRP_FV = {
   F: [
     ["faca","faca"],["fada","fada"],["faixa","faixa"],["falcao","falcão"],
     ["fantasma","fantasma"],["fantoche","fantoche"],["farinha","farinha"],
@@ -621,11 +666,83 @@ const FV_RAW = {
     ["voz","voz"],["vulcao","vulcão"]
   ]
 };
+const GRP_MN = {
+  M: [
+    ["maca","maçã"],["macaco","macaco"],["macarrao","macarrão"],["machado","machado"],
+    ["madeira","madeira"],["mae","mãe"],["magico","mágico"],["mala","mala"],
+    ["mamadeira","mamadeira"],["mamao","mamão"],["manga","manga"],["manteiga","manteiga"],
+    ["mao","mão"],["mapa","mapa"],["maquina","máquina"],["mar","mar"],
+    ["margarida","margarida"],["marreco","marreco"],["martelo","martelo"],
+    ["mascara","máscara"],["mesa","mesa"],["mel","mel"],["melancia","melancia"],
+    ["melao","melão"],["menina","menina"],["menino","menino"],["mexerica","mexerica"],
+    ["milho","milho"],["minhoca","minhoca"],["mochila","mochila"],["moeda","moeda"],
+    ["moinho","moinho"],["montanha","montanha"],["morango","morango"],["morcego","morcego"],
+    ["mosca","mosca"],["mosquito","mosquito"],["motocicleta","motocicleta"],["mula","mula"],
+    ["mumia","múmia"],["muro","muro"],["museu","museu"]
+  ],
+  N: [
+    ["nabo","nabo"],["nariz","nariz"],["navio","navio"],["nene","nenê"],["neta","neta"],
+    ["neto","neto"],["neve","neve"],["ninho","ninho"],["noite","noite"],["nota","nota"],
+    ["numero","número"],["nuvem","nuvem"]
+  ]
+};
+const GRP_L = {
+  L: [
+    ["la","lã"],["labareda","labareda"],["laco","laço"],["ladrao","ladrão"],
+    ["lagarta","lagarta"],["lagarto","lagarto"],["lago","lago"],["lagosta","lagosta"],
+    ["lama","lama"],["lampada","lâmpada"],["lanca","lança"],["lancha","lancha"],
+    ["lanche","lanche"],["lanterna","lanterna"],["lapis","lápis"],["laranja","laranja"],
+    ["lasanha","lasanha"],["lata","lata"],["leao","leão"],["lebre","lebre"],
+    ["leite","leite"],["lenco","lenço"],["lenha","lenha"],["lente","lente"],
+    ["leopardo","leopardo"],["letra","letra"],["libelula","libélula"],["lilas","lilás"],
+    ["limao","limão"],["lingua","língua"],["linha","linha"],["lirio","lírio"],
+    ["livro","livro"],["lixo","lixo"],["lobo","lobo"],["locomotiva","locomotiva"],
+    ["lontra","lontra"],["lua","lua"],["lula","lula"],["lupa","lupa"],["luva","luva"],
+    ["luz","luz"]
+  ]
+};
+const GRP_SZ = {
+  S: [
+    ["sabao","sabão"],["sabonete","sabonete"],["saco","saco"],["sacola","sacola"],
+    ["saia","saia"],["sal","sal"],["salada","salada"],["salsicha","salsicha"],
+    ["sandalia","sandália"],["sanduiche","sanduíche"],["sapato","sapato"],["sapo","sapo"],
+    ["sardinha","sardinha"],["seda","seda"],["selo","selo"],["semente","semente"],
+    ["sereia","sereia"],["serpente","serpente"],["serra","serra"],["seta","seta"],
+    ["sino","sino"],["siri","siri"],["sofa","sofá"],["sol","sol"],["soldado","soldado"],
+    ["sopa","sopa"],["sorvete","sorvete"],["submarino","submarino"],["suco","suco"],
+    ["sunga","sunga"]
+  ],
+  Z: [
+    ["zangao","zangão"],["zebra","zebra"],["zebu","zebu"],["zepelim","zepelim"],
+    ["ziper","zíper"],["zoologico","zoológico"]
+  ]
+};
+const GRP_R = {
+  R: [
+    ["ra","rã"],["rabanete","rabanete"],["radio","rádio"],["raio","raio"],
+    ["rainha","rainha"],["raiz","raiz"],["ramo","ramo"],["raposa","raposa"],
+    ["rato","rato"],["rede","rede"],["regador","regador"],["regua","régua"],
+    ["rei","rei"],["relogio","relógio"],["remo","remo"],["repolho","repolho"],
+    ["rinoceronte","rinoceronte"],["rio","rio"],["robo","robô"],["roda","roda"],
+    ["rolha","rolha"],["rosa","rosa"],["rosto","rosto"],["roupa","roupa"],
+    ["rua","rua"],["rubi","rubi"]
+  ]
+};
+const GRP_J = {
+  J: [
+    ["jaca","jaca"],["jacare","jacaré"],["jabuti","jabuti"],["jabuticaba","jabuticaba"],
+    ["jaguar","jaguar"],["jaguatirica","jaguatirica"],["janela","janela"],
+    ["jangada","jangada"],["jaqueta","jaqueta"],["jararaca","jararaca"],["jardim","jardim"],
+    ["jarro","jarro"],["jato","jato"],["jaula","jaula"],["jenipapo","jenipapo"],
+    ["jiboia","jiboia"],["joaninha","joaninha"],["joelho","joelho"],["jogo","jogo"],
+    ["joia","joia"],["jornal","jornal"],["jumento","jumento"],["juiz","juiz"]
+  ]
+};
 
-// Como ainda não há um inventário fixo das imagens de F/V, geramos os nomes
-// prováveis: <base> e <base>2, em jpg/jpeg/png/webp. O loadRound tenta cada um
-// e cai no placeholder só quando todos falham.
-function fvCandidates(base) {
+// Como ainda não há um inventário fixo dessas imagens, geramos os nomes prováveis:
+// <base> e <base>2, em jpg/jpeg/png/webp. O loadRound tenta cada um e cai no
+// placeholder só quando todos falham.
+function wordImageCandidates(base) {
   const list = [];
   for (const suf of ['', '2'])
     for (const ext of ['jpg', 'jpeg', 'png', 'webp'])
@@ -634,15 +751,32 @@ function fvCandidates(base) {
 }
 
 function makeWord(base, display, letter) {
-  return { baseName: base, displayWord: display, vowel: letter, imageCandidates: fvCandidates(base) };
+  return { baseName: base, displayWord: display, vowel: letter, imageCandidates: wordImageCandidates(base) };
 }
 
-const FV_WORDS = [
-  ...FV_RAW.F.map(([b,d]) => makeWord(b, d, 'F')),
-  ...FV_RAW.V.map(([b,d]) => makeWord(b, d, 'V'))
-];
-
 const DISTRACTORS = ['B','C','D','G','J','L','M','N','P','R','S','T','Z'];
+
+// Monta a config de uma atividade de letra inicial a partir do(s) grupo(s) de
+// palavras. `words` = { LETRA: [[base, grafia], ...] } (uma ou duas letras).
+// buildDeck usa TODAS as palavras (embaralhadas, sem repetir letra em sequência
+// quando possível); buildOptions mostra a(s) letra(s) do grupo + distratores,
+// somando 3 botões.
+function letterActivity({ title, character, charStyle, words }) {
+  const letters = Object.keys(words);
+  const all = [];
+  for (const L of letters) for (const [b, d] of words[L]) all.push(makeWord(b, d, L));
+  return {
+    title, character, charStyle, keys: letters,
+    buildDeck() { return shuffleNoConsecutive([...all]); },
+    buildOptions(correct) {
+      const opts = new Set([correct]);
+      for (const L of letters) if (opts.size < 3) opts.add(L);
+      const pool = DISTRACTORS.filter(x => !letters.includes(x));
+      while (opts.size < 3) opts.add(pool[Math.floor(Math.random() * pool.length)]);
+      return [...opts].sort(() => Math.random() - 0.5);
+    }
+  };
+}
 
 // ─── Configuração das atividades ────────────────────────────────────────────────
 const ACTIVITIES = {
@@ -661,29 +795,69 @@ const ACTIVITIES = {
       return [correct, ...dist].sort(() => Math.random() - 0.5);
     }
   },
-  fv: {
-    title:     'Aventuras do F e V',
+  // Personagens de corpo inteiro: ampliados e recentrados no rosto; uma faixa
+  // extra deixa o cabelo "saltar" para fora do topo do disco (como o menino das
+  // vogais). Os números do disco/faixa variam conforme a cabeça de cada um.
+  fv: letterActivity({
+    title: 'Aventuras do F e V',
     character: 'img/personagem_alfabeto1.png',
-    // Personagem de corpo inteiro (mais estreita que o menino): ampliada e
-    // recentrada no rosto. Igual ao menino, uma faixa extra deixa o cabelo
-    // "saltar" para fora do disco, no topo.
     charStyle: {
       width:'470px', left:'-139px', top:'10px',
       mask:'radial-gradient(circle 88px at 229px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
       maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
     },
-    keys:      ['F','V'],
-    buildDeck() {
-      // Todas as palavras de F e V disponíveis (embaralhadas, sem repetir letra
-      // em sequência), não apenas uma amostra.
-      return shuffleNoConsecutive([...FV_WORDS]);
+    words: GRP_FV
+  }),
+  mn: letterActivity({
+    title: 'Aventuras do M e N',
+    character: 'img/personagem_alfabeto2.png',
+    charStyle: {
+      width:'470px', left:'-141px', top:'10px',
+      mask:'radial-gradient(circle 88px at 231px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
     },
-    buildOptions(correct) {
-      const other = correct === 'F' ? 'V' : 'F';
-      const dist  = DISTRACTORS[Math.floor(Math.random() * DISTRACTORS.length)];
-      return [correct, other, dist].sort(() => Math.random() - 0.5);
-    }
-  }
+    words: GRP_MN
+  }),
+  l: letterActivity({
+    title: 'Aventuras do L',
+    character: 'img/personagem_alfabeto3.png',
+    charStyle: {
+      width:'470px', left:'-143px', top:'10px',
+      mask:'radial-gradient(circle 88px at 233px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
+    },
+    words: GRP_L
+  }),
+  sz: letterActivity({
+    title: 'Aventuras do S e Z',
+    character: 'img/personagem_alfabeto4.png',
+    charStyle: {
+      width:'470px', left:'-143px', top:'10px',
+      mask:'radial-gradient(circle 88px at 233px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
+    },
+    words: GRP_SZ
+  }),
+  r: letterActivity({
+    title: 'Aventuras do R forte',
+    character: 'img/personagem_alfabeto5.png',
+    charStyle: {
+      width:'470px', left:'-143px', top:'10px',
+      mask:'radial-gradient(circle 88px at 233px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
+    },
+    words: GRP_R
+  }),
+  j: letterActivity({
+    title: 'Aventuras do J',
+    character: 'img/personagem_alfabeto6.png',
+    charStyle: {
+      width:'470px', left:'-139px', top:'10px',
+      mask:'radial-gradient(circle 88px at 229px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 128px 80px', maskPosition:'0 0, 166px 0', maskRepeat:'no-repeat,no-repeat'
+    },
+    words: GRP_J
+  })
 };
 let currentActivity = ACTIVITIES.vowels;
 
@@ -1006,6 +1180,11 @@ function selectActivity(activity) {
 
 function selectVowels() { selectActivity(ACTIVITIES.vowels); }
 function selectFV()     { selectActivity(ACTIVITIES.fv); }
+function selectMN()     { selectActivity(ACTIVITIES.mn); }
+function selectL()      { selectActivity(ACTIVITIES.l); }
+function selectSZ()     { selectActivity(ACTIVITIES.sz); }
+function selectR()      { selectActivity(ACTIVITIES.r); }
+function selectJ()      { selectActivity(ACTIVITIES.j); }
 
 // ─── Fundo (liga/desliga imagem) ───────────────────────────────────────────────
 let bgOn = false;   // default: inicia sem imagem de fundo
