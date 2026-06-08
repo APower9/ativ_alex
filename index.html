@@ -224,14 +224,14 @@
         <span class="tile-label">m e n</span>
       </button>
 
-      <!-- Atividade ativa: L -->
-      <button class="tile tile-active" onclick="selectL()">
+      <!-- Atividade ativa: L e J -->
+      <button class="tile tile-active" onclick="selectLJ()">
         <div class="tile-face">
           <div class="vowels">
-            <span style="color:#f59e0b">L</span>
+            <span style="color:#f59e0b">L</span><span style="color:#8b3fc0">J</span>
           </div>
         </div>
-        <span class="tile-label">l</span>
+        <span class="tile-label">l e j</span>
       </button>
 
       <!-- Atividade ativa: S e Z -->
@@ -254,19 +254,65 @@
         <span class="tile-label">r forte</span>
       </button>
 
-      <!-- Atividade ativa: J -->
-      <button class="tile tile-active" onclick="selectJ()">
+      <!-- Atividade ativa: P B T D -->
+      <button class="tile tile-active" onclick="selectPBTD()">
         <div class="tile-face">
           <div class="vowels">
-            <span style="color:#8b3fc0">J</span>
+            <span style="color:#e8423a">P</span><span style="color:#0058bd">B</span><span style="color:#2bb24c">T</span><span style="color:#f59e0b">D</span>
           </div>
         </div>
-        <span class="tile-label">j</span>
+        <span class="tile-label">p b t d</span>
       </button>
 
-      <!-- 2 placeholders -->
-      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
-      <div class="tile tile-locked"><div class="tile-face"><span class="material-symbols-outlined" style="font-size:44px;color:#9aa3c7;">lock</span></div><span class="tile-label" style="color:#9aa3c7;">em breve</span></div>
+      <!-- Atividade ativa: C e G (ca co cu / ga go gu) -->
+      <button class="tile tile-active" onclick="selectCG()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#0058bd">C</span><span style="color:#2bb24c">G</span>
+          </div>
+        </div>
+        <span class="tile-label">c e g</span>
+      </button>
+
+      <!-- Atividade ativa: Q -->
+      <button class="tile tile-active" onclick="selectQ()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#8b3fc0">Q</span>
+          </div>
+        </div>
+        <span class="tile-label">q</span>
+      </button>
+
+      <!-- Atividade ativa: X e CH -->
+      <button class="tile tile-active" onclick="selectXCH()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#e8423a">X</span><span style="color:#0058bd">CH</span>
+          </div>
+        </div>
+        <span class="tile-label">x e ch</span>
+      </button>
+
+      <!-- Atividade ativa: K W Y -->
+      <button class="tile tile-active" onclick="selectKWY()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#2bb24c">K</span><span style="color:#f59e0b">W</span><span style="color:#8b3fc0">Y</span>
+          </div>
+        </div>
+        <span class="tile-label">k w y</span>
+      </button>
+
+      <!-- Atividade ativa: H -->
+      <button class="tile tile-active" onclick="selectH()">
+        <div class="tile-face">
+          <div class="vowels">
+            <span style="color:#e8423a">H</span>
+          </div>
+        </div>
+        <span class="tile-label">h</span>
+      </button>
     </div>
   </main>
 </div>
@@ -316,7 +362,7 @@
     class="animate-bounce-sm flex-shrink-0"
     style="position:relative; width:180px;"
   >
-    <div id="speech-bubble" style="display:none;">Seleciona a letra inicial da palavra!</div>
+    <div id="speech-bubble" style="display:none;">Selecione a letra inicial da palavra!</div>
 
     <!-- Grupo do personagem: disco (moldura) + menino "saindo" do círculo -->
     <div
@@ -502,7 +548,7 @@
 <!-- ── Overlay do enunciado ──────────────────────────────────────────────────── -->
 <div id="speech-overlay" style="position:fixed;inset:0;z-index:999;background:rgba(0,17,89,0.65);display:none;align-items:center;justify-content:center;">
   <div style="background:#ffffff;border:4px solid #0058bd;border-radius:20px;padding:32px 40px;box-shadow:0 8px 0 0 #0058bd;font-size:24px;font-weight:700;color:#0058bd;text-align:center;font-family:'Quicksand',sans-serif;max-width:320px;line-height:1.5;">
-    Seleciona a letra inicial da palavra!
+    Selecione a letra inicial da palavra!
   </div>
 </div>
 
@@ -738,6 +784,95 @@ const GRP_J = {
     ["joia","joia"],["jornal","jornal"],["jumento","jumento"],["juiz","juiz"]
   ]
 };
+const GRP_PBTD = {
+  P: [
+    ["palhaco","palhaço"],["panela","panela"],["pao","pão"],["papagaio","papagaio"],
+    ["pato","pato"],["pavao","pavão"],["peixe","peixe"],["pente","pente"],
+    ["pepino","pepino"],["pera","pera"],["piao","pião"],["pincel","pincel"],
+    ["pinguim","pinguim"],["pipoca","pipoca"],["pirulito","pirulito"],["pizza","pizza"],
+    ["planeta","planeta"],["polvo","polvo"],["pomba","pomba"],["ponte","ponte"],
+    ["porco","porco"],["porta","porta"],["prato","prato"],["prego","prego"],["pulga","pulga"]
+  ],
+  B: [
+    ["bala","bala"],["balao","balão"],["baleia","baleia"],["banana","banana"],
+    ["bandeira","bandeira"],["barco","barco"],["batata","batata"],["bebe","bebê"],
+    ["bicicleta","bicicleta"],["bife","bife"],["bigode","bigode"],["bola","bola"],
+    ["bolo","bolo"],["boneca","boneca"],["borboleta","borboleta"],["bota","bota"],
+    ["braco","braço"],["bruxa","bruxa"],["bule","bule"],["burro","burro"],["buzina","buzina"]
+  ],
+  T: [
+    ["tambor","tambor"],["tartaruga","tartaruga"],["tatu","tatu"],["telefone","telefone"],
+    ["tenis","tênis"],["tesoura","tesoura"],["tigre","tigre"],["tijolo","tijolo"],
+    ["tinta","tinta"],["toalha","toalha"],["tomate","tomate"],["torneira","torneira"],
+    ["touca","touca"],["trator","trator"],["trem","trem"],["triangulo","triângulo"],
+    ["triciclo","triciclo"],["tromba","tromba"],["tronco","tronco"],["tubarao","tubarão"],
+    ["tucano","tucano"],["tulipa","tulipa"]
+  ],
+  D: [
+    ["dado","dado"],["dalia","dália"],["dardo","dardo"],["dedo","dedo"],["dente","dente"],
+    ["dentadura","dentadura"],["dinheiro","dinheiro"],["dinossauro","dinossauro"],
+    ["disco","disco"],["doce","doce"],["domino","dominó"],["dragao","dragão"],
+    ["dromedario","dromedário"],["duna","duna"]
+  ]
+};
+const GRP_CG = {
+  C: [
+    ["cabeca","cabeça"],["cabelo","cabelo"],["cabra","cabra"],["cachorro","cachorro"],
+    ["cadeado","cadeado"],["cadeira","cadeira"],["caderno","caderno"],["cafe","café"],
+    ["caixa","caixa"],["calca","calça"],["camelo","camelo"],["caminhao","caminhão"],
+    ["camisa","camisa"],["canguru","canguru"],["caneta","caneta"],["canoa","canoa"],
+    ["capacete","capacete"],["caracol","caracol"],["carneiro","carneiro"],["carro","carro"],
+    ["casa","casa"],["casaco","casaco"],["castelo","castelo"],["cavalo","cavalo"],
+    ["coelho","coelho"],["cofre","cofre"],["copo","copo"],["coracao","coração"],
+    ["corda","corda"],["coruja","coruja"],["cozinha","cozinha"]
+  ],
+  G: [
+    ["gado","gado"],["gaiola","gaiola"],["galinha","galinha"],["galo","galo"],
+    ["gamba","gambá"],["gancho","gancho"],["ganso","ganso"],["garca","garça"],
+    ["garfo","garfo"],["garganta","garganta"],["garrafa","garrafa"],["gato","gato"],
+    ["gaveta","gaveta"],["gaviao","gavião"],["goiaba","goiaba"],["golfinho","golfinho"],
+    ["gorila","gorila"],["gota","gota"],["guarana","guaraná"]
+  ]
+};
+// Q: bloco QUA/QUO primeiro, depois bloco QUE/QUI (a resposta é sempre Q).
+const GRP_Q_QUAQUO = {
+  Q: [
+    ["quadra","quadra"],["quadrado","quadrado"],["quadrinhos","quadrinhos"],
+    ["quadro","quadro"],["quarto","quarto"],["quati","quati"],["quatro","quatro"]
+  ]
+};
+const GRP_Q_QUEQUI = {
+  Q: [
+    ["queijo","queijo"],["quepe","quepe"],["quiabo","quiabo"],
+    ["quilo","quilo"],["quintal","quintal"]
+  ]
+};
+const GRP_XCH = {
+  X: [
+    ["xadrez","xadrez"],["xale","xale"],["xampu","xampu"],["xarope","xarope"],
+    ["xicara","xícara"],["xilofone","xilofone"],["xerife","xerife"]
+  ],
+  CH: [
+    ["cha","chá"],["chaleira","chaleira"],["chamine","chaminé"],["chapeu","chapéu"],
+    ["chave","chave"],["chaveiro","chaveiro"],["chiclete","chiclete"],["chifre","chifre"],
+    ["chimpanze","chimpanzé"],["chinelo","chinelo"],["chocalho","chocalho"],
+    ["chocolate","chocolate"],["chuchu","chuchu"],["chupeta","chupeta"],
+    ["churrasco","churrasco"],["chuva","chuva"],["chuveiro","chuveiro"]
+  ]
+};
+const GRP_KWY = {
+  K: [["kiwi","kiwi"],["ketchup","ketchup"],["kart","kart"],["kitesurf","kitesurf"]],
+  W: [["waffle","waffle"],["windsurfe","windsurfe"],["web","web"]],
+  Y: [["yoga","yoga"],["yakisoba","yakisoba"]]
+};
+const GRP_H = {
+  H: [
+    ["hamburguer","hambúrguer"],["handebol","handebol"],["harpia","harpia"],
+    ["helice","hélice"],["helicoptero","helicóptero"],["heroi","herói"],["hiena","hiena"],
+    ["hipopotamo","hipopótamo"],["homem","homem"],["horta","horta"],["hortela","hortelã"],
+    ["hospital","hospital"],["hotel","hotel"]
+  ]
+};
 
 // Como ainda não há um inventário fixo dessas imagens, geramos os nomes prováveis:
 // <base> e <base>2, em jpg/jpeg/png/webp. O loadRound tenta cada um e cai no
@@ -756,18 +891,52 @@ function makeWord(base, display, letter) {
 
 const DISTRACTORS = ['B','C','D','G','J','L','M','N','P','R','S','T','Z'];
 
+// Sorteia até `total` palavras equilibrando entre as letras do grupo: pega 1 de
+// cada letra por rodada (round-robin), completando de outra quando uma acaba.
+// Ex.: 2 letras → ~10+10; P/B/T/D → 5 cada; vogais → 4 cada. Retorna <= total.
+function pickBalanced(words, total) {
+  const byLetter = {};
+  for (const w of words) (byLetter[w.vowel] = byLetter[w.vowel] || []).push(w);
+  const buckets = Object.values(byLetter);
+  for (const b of buckets)
+    for (let i = b.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; }
+  const picked = [];
+  for (let round = 0; picked.length < total; round++) {
+    let advanced = false;
+    for (const b of buckets) {
+      if (picked.length >= total) break;
+      if (round < b.length) { picked.push(b[round]); advanced = true; }
+    }
+    if (!advanced) break;
+  }
+  return picked;
+}
+
 // Monta a config de uma atividade de letra inicial a partir do(s) grupo(s) de
 // palavras. `words` = { LETRA: [[base, grafia], ...] } (uma ou duas letras).
-// buildDeck usa TODAS as palavras (embaralhadas, sem repetir letra em sequência
-// quando possível); buildOptions mostra a(s) letra(s) do grupo + distratores,
-// somando 3 botões.
-function letterActivity({ title, character, charStyle, words }) {
-  const letters = Object.keys(words);
-  const all = [];
-  for (const L of letters) for (const [b, d] of words[L]) all.push(makeWord(b, d, L));
+// buildDeck sorteia até ROUND_SIZE palavras (balanceadas por letra, a cada
+// sessão, sem repetir letra em sequência); buildOptions mostra a(s) letra(s) do
+// grupo + distratores, somando 3 botões.
+function letterActivity({ title, character, charStyle, words, blocks }) {
+  // `words` = { LETRA: [[base,grafia],...] } → uma atividade com tudo embaralhado.
+  // `blocks` = [ {LETRA:[...]}, ... ] → blocos mostrados NA ORDEM (cada um
+  //   embaralhado por dentro), p/ atividades como o Q (QUA/QUO depois QUE/QUI).
+  const groups = blocks || [words];
+  const letters = [...new Set(groups.flatMap(g => Object.keys(g)))];
+  const blockWords = groups.map(g =>
+    Object.keys(g).flatMap(L => g[L].map(([b, d]) => makeWord(b, d, L)))
+  );
   return {
     title, character, charStyle, keys: letters,
-    buildDeck() { return shuffleNoConsecutive([...all]); },
+    buildDeck() {
+      // Distribui o teto de 20 entre os blocos (proporcional, preservando a
+      // ordem); cada bloco é balanceado por letra e embaralhado.
+      const avail = blockWords.reduce((n, b) => n + b.length, 0);
+      return blockWords.flatMap(b => {
+        const cap = avail <= ROUND_SIZE ? b.length : Math.round(ROUND_SIZE * b.length / avail);
+        return shuffleNoConsecutive(pickBalanced(b, cap));
+      });
+    },
     buildOptions(correct) {
       const opts = new Set([correct]);
       for (const L of letters) if (opts.size < 3) opts.add(L);
@@ -789,7 +958,7 @@ const ACTIVITIES = {
       maskSize:'auto, 90px 92px', maskPosition:'0 0, 166px 0', maskRepeat:'no-repeat,no-repeat'
     },
     keys:      VOWELS,
-    buildDeck() { return shuffleNoConsecutive(WORDS).slice(0, ROUND_SIZE); },
+    buildDeck() { return shuffleNoConsecutive(pickBalanced(WORDS, ROUND_SIZE)); },
     buildOptions(correct) {
       const dist = VOWELS.filter(v => v !== correct).sort(() => Math.random() - 0.5).slice(0, 2);
       return [correct, ...dist].sort(() => Math.random() - 0.5);
@@ -818,15 +987,15 @@ const ACTIVITIES = {
     },
     words: GRP_MN
   }),
-  l: letterActivity({
-    title: 'Aventuras do L',
+  lj: letterActivity({
+    title: 'Aventuras do L e J',
     character: 'img/personagem_alfabeto3.png',
     charStyle: {
       width:'470px', left:'-143px', top:'10px',
       mask:'radial-gradient(circle 88px at 233px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
       maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
     },
-    words: GRP_L
+    words: { ...GRP_L, ...GRP_J }
   }),
   sz: letterActivity({
     title: 'Aventuras do S e Z',
@@ -848,15 +1017,65 @@ const ACTIVITIES = {
     },
     words: GRP_R
   }),
-  j: letterActivity({
-    title: 'Aventuras do J',
-    character: 'img/personagem_alfabeto6.png',
+  pbtd: letterActivity({
+    title: 'Aventuras do P, B, T e D',
+    character: 'img/personagem_alfabeto7.png',
     charStyle: {
-      width:'470px', left:'-139px', top:'10px',
-      mask:'radial-gradient(circle 88px at 229px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
-      maskSize:'auto, 128px 80px', maskPosition:'0 0, 166px 0', maskRepeat:'no-repeat,no-repeat'
+      width:'470px', left:'-141px', top:'10px',
+      mask:'radial-gradient(circle 88px at 231px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
     },
-    words: GRP_J
+    words: GRP_PBTD
+  }),
+  cg: letterActivity({
+    title: 'Aventuras do C e G (ca, co, cu / ga, go, gu)',
+    character: 'img/personagem_alfabeto8.png',
+    charStyle: {
+      width:'470px', left:'-143px', top:'9px',
+      mask:'radial-gradient(circle 88px at 233px 126px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 108px 70px', maskPosition:'0 0, 176px 0', maskRepeat:'no-repeat,no-repeat'
+    },
+    words: GRP_CG
+  }),
+  q: letterActivity({
+    title: 'Aventuras do Q',
+    character: 'img/personagem_alfabeto9.png',
+    charStyle: {
+      width:'470px', left:'-141px', top:'10px',
+      mask:'radial-gradient(circle 88px at 231px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
+    },
+    blocks: [GRP_Q_QUAQUO, GRP_Q_QUEQUI]
+  }),
+  xch: letterActivity({
+    title: 'Aventuras do X e CH',
+    character: 'img/personagem_alfabeto10.png',
+    charStyle: {
+      width:'470px', left:'-141px', top:'10px',
+      mask:'radial-gradient(circle 88px at 231px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
+    },
+    words: GRP_XCH
+  }),
+  kwy: letterActivity({
+    title: 'Aventuras do K, W e Y',
+    character: 'img/personagem_alfabeto11.png',
+    charStyle: {
+      width:'470px', left:'-143px', top:'9px',
+      mask:'radial-gradient(circle 88px at 233px 126px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 108px 70px', maskPosition:'0 0, 176px 0', maskRepeat:'no-repeat,no-repeat'
+    },
+    words: GRP_KWY
+  }),
+  h: letterActivity({
+    title: 'Aventuras do H',
+    character: 'img/personagem_alfabeto12.png',
+    charStyle: {
+      width:'470px', left:'-141px', top:'10px',
+      mask:'radial-gradient(circle 88px at 231px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
+      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
+    },
+    words: GRP_H
   })
 };
 let currentActivity = ACTIVITIES.vowels;
@@ -920,6 +1139,29 @@ function playWordAudio(word, onEnd) {
   mp3.play().catch(() => speakText(word.displayWord, onEnd));
 }
 
+// Enunciado compartilhado por todas as atividades: toca audio/enunciado_letra.*
+// (mp3/m4a/ogg) e, só se nenhum formato existir, fala o texto por TTS. Bloqueio
+// de autoplay NÃO cai no TTS — é resolvido pelo gesto/timeout em playRoundIntro.
+const ENUNCIADO_TEXT = 'Selecione a letra inicial da palavra';
+const ENUNCIADO_SRCS = ['audio/enunciado_letra.m4a', 'audio/enunciado_letra.mp3', 'audio/enunciado_letra.ogg'];
+function playEnunciado(onEnd, onStart) {
+  let settled = false;   // onEnd/fallback disparado uma única vez
+  const audio = new Audio();
+  if (onStart) audio.onplaying = onStart;
+  audio.onended = () => { if (!settled) { settled = true; if (onEnd) onEnd(); } };
+  let i = 0;
+  const tryNext = () => {
+    if (settled) return;
+    if (i >= ENUNCIADO_SRCS.length) {           // nenhum formato existe → TTS
+      settled = true; speakText(ENUNCIADO_TEXT, onEnd, onStart); return;
+    }
+    audio.src = ENUNCIADO_SRCS[i++];
+    audio.play().catch(() => {});               // autoplay bloqueado → espera gesto/timeout
+  };
+  audio.onerror = tryNext;                       // arquivo ausente/inválido → próximo formato
+  tryNext();
+}
+
 function playRoundIntro(word) {
   // Rodadas seguintes já rolam após um gesto → áudio destravado.
   if (enunciadoDone) {
@@ -954,10 +1196,9 @@ function playRoundIntro(word) {
   }
 
   function startEnunciado() {
-    speakText(
-      'Seleciona a letra inicial da palavra',
+    playEnunciado(
       () => proceed(true),          // onEnd  → toca a palavra, depois habilita
-      () => { started = true; }     // onStart → autoplay realmente começou
+      () => { started = true; }     // onStart → áudio realmente começou
     );
   }
 
@@ -1181,10 +1422,15 @@ function selectActivity(activity) {
 function selectVowels() { selectActivity(ACTIVITIES.vowels); }
 function selectFV()     { selectActivity(ACTIVITIES.fv); }
 function selectMN()     { selectActivity(ACTIVITIES.mn); }
-function selectL()      { selectActivity(ACTIVITIES.l); }
+function selectLJ()     { selectActivity(ACTIVITIES.lj); }
 function selectSZ()     { selectActivity(ACTIVITIES.sz); }
 function selectR()      { selectActivity(ACTIVITIES.r); }
-function selectJ()      { selectActivity(ACTIVITIES.j); }
+function selectPBTD()   { selectActivity(ACTIVITIES.pbtd); }
+function selectCG()     { selectActivity(ACTIVITIES.cg); }
+function selectQ()      { selectActivity(ACTIVITIES.q); }
+function selectXCH()    { selectActivity(ACTIVITIES.xch); }
+function selectKWY()    { selectActivity(ACTIVITIES.kwy); }
+function selectH()      { selectActivity(ACTIVITIES.h); }
 
 // ─── Fundo (liga/desliga imagem) ───────────────────────────────────────────────
 let bgOn = false;   // default: inicia sem imagem de fundo
@@ -1204,12 +1450,34 @@ function applyBackground() {
 function toggleBackground() { bgOn = !bgOn; applyBackground(); }
 
 // ─── Teclado ──────────────────────────────────────────────────────────────────
+// Letras simples disparam direto; dígrafos (ex.: CH) são digitados em 2 teclas:
+// C depois H. pendingDigraph guarda a 1ª tecla até a 2ª (ou expira em 1,2s).
+let pendingDigraph = '';
+let pendingDigraphTimer = null;
+function clickOption(letter) {
+  const btn = document.querySelector(`#options-container [data-letter="${letter}"]`);
+  if (btn) btn.click();
+}
 document.addEventListener('keydown', e => {
   const key = e.key.toUpperCase();
-  if (currentActivity.keys.includes(key)) {
-    const btn = document.querySelector(`#options-container [data-letter="${key}"]`);
-    if (btn) btn.click();
+  if (key.length !== 1 || key < 'A' || key > 'Z') return;
+  const keys = currentActivity.keys;
+
+  // completa um dígrafo pendente (ex.: C + H = CH)
+  if (pendingDigraph) {
+    const combo = pendingDigraph + key;
+    clearTimeout(pendingDigraphTimer); pendingDigraph = '';
+    if (keys.includes(combo)) { clickOption(combo); return; }
+    // combo inválido → segue tratando a tecla atual normalmente
   }
+  // inicia um dígrafo se alguma resposta de 2 letras começa por esta tecla
+  // (e a própria tecla não é uma resposta simples)
+  if (!keys.includes(key) && keys.some(k => k.length === 2 && k[0] === key)) {
+    pendingDigraph = key;
+    pendingDigraphTimer = setTimeout(() => { pendingDigraph = ''; }, 1200);
+    return;
+  }
+  if (keys.includes(key)) clickOption(key);
 });
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
