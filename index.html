@@ -162,6 +162,46 @@
     display: flex; gap: 2px; font-weight: 700; font-family: "Quicksand", sans-serif;
     font-size: clamp(22px, 7vw, 42px); line-height: 1;
   }
+  /* Toggle de modo (LETRAS / PALAVRAS) no lado esquerdo do menu */
+  #mode-toggle {
+    position: fixed; left: 16px; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 12px; z-index: 60;
+  }
+  .mode-btn {
+    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 15px;
+    letter-spacing: 0.05em; padding: 16px 12px; min-width: 104px; border-radius: 16px;
+    border: 3px solid #0058bd; background: #fff; color: #0058bd; cursor: pointer;
+    box-shadow: 0 5px 0 0 #0058bd; transition: transform .1s, background .15s, color .15s;
+  }
+  .mode-btn:hover  { transform: scale(1.03); }
+  .mode-btn:active { box-shadow: 0 0 0 0 #0058bd; transform: translateY(5px); }
+  .mode-btn.active { background: #0058bd; color: #fff; }
+  @media (max-width: 640px) { #mode-toggle { left: 6px; } .mode-btn { min-width: 78px; padding: 12px 6px; font-size: 12px; } }
+  /* Caixas de soletração (modo palavra) */
+  #spell-boxes { display: none; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 6px; }
+  .spell-box {
+    width: 34px; height: 46px; border-radius: 8px; border: 3px solid #dee1ff; background: #f3f4ff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; font-weight: 700; color: #001159;
+    font-family: "Quicksand", sans-serif; text-transform: lowercase;
+  }
+  .spell-box.given  { border-style: dashed; color: #9aa3c7; background: #eef0ff; }
+  .spell-box.ok     { border-color: #298600; background: #e7f6e1; color: #298600; }
+  .spell-box.bad    { border-color: #e8423a; background: #ffe9e7; color: #e8423a; }
+  .spell-box.reveal { border-color: #f59e0b; background: #fff6e6; color: #b26b00; }
+  #spell-skip {
+    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 16px;
+    padding: 10px 20px; border-radius: 9999px; border: 3px solid #0058bd;
+    background: #fff; color: #0058bd; cursor: pointer; box-shadow: 0 4px 0 0 #0058bd;
+  }
+  #spell-skip:active { box-shadow: 0 0 0 0 #0058bd; transform: translateY(4px); }
+  /* Caixa alta / baixa das letras e palavras dentro da atividade (padrão: alta) */
+  #game-screen.case-upper .btn-letter,
+  #game-screen.case-upper #word-text,
+  #game-screen.case-upper .spell-box { text-transform: uppercase; }
+  #game-screen.case-lower .btn-letter,
+  #game-screen.case-lower #word-text,
+  #game-screen.case-lower .spell-box { text-transform: lowercase; }
 </style>
 </head>
 
@@ -174,6 +214,11 @@
 
 <!-- ── Tela de menu (seleção de atividade) ───────────────────────────────────── -->
 <div id="menu-screen">
+  <!-- Modo de jogo: escolher letra inicial (LETRAS) ou soletrar (PALAVRAS) -->
+  <div id="mode-toggle">
+    <button id="mode-letras" class="mode-btn active" onclick="setGameMode('letras')">LETRAS</button>
+    <button id="mode-palavras" class="mode-btn" onclick="setGameMode('palavras')">PALAVRAS</button>
+  </div>
   <header class="w-full px-4 pt-4 pb-2">
     <div class="glass rounded-full px-6 py-3 flex justify-between items-center max-w-5xl mx-auto shadow-sm">
       <h1 style="font-size:22px;font-weight:700;color:#0058bd;">Escolha uma atividade</h1>
@@ -318,7 +363,7 @@
 </div>
 
 <!-- ── Jogo (tela) ───────────────────────────────────────────────────────────── -->
-<div id="game-screen" style="display:none;">
+<div id="game-screen" class="case-upper" style="display:none;">
 
 <!-- ── Header ──────────────────────────────────────────────────────────────── -->
 <header class="w-full px-4 pt-4 pb-2">
@@ -338,6 +383,17 @@
         <span class="material-symbols-outlined" style="font-size:20px;">home</span>
       </button>
       <span id="progress-text" style="font-size:16px;font-weight:700;color:#0058bd;font-family:'Lexend',sans-serif;">1 / 20</span>
+      <button
+        id="case-toggle" onclick="toggleLetterCase()" title="Alternar maiúsculas / minúsculas"
+        style="
+          background:#0058bd; color:#fff; border:none; border-radius:9999px;
+          width:38px; height:38px; display:flex; align-items:center; justify-content:center;
+          cursor:pointer; box-shadow:0 3px 8px rgba(0,0,0,0.2); transition:transform 0.1s;
+          font-family:'Quicksand',sans-serif; font-weight:700; font-size:15px; letter-spacing:0.02em;
+        "
+        onmouseenter="this.style.transform='scale(1.1)'"
+        onmouseleave="this.style.transform='scale(1)'"
+      >ABC</button>
       <button
         id="bg-toggle" class="bg-toggle-btn" onclick="toggleBackground()" title="Ocultar imagem de fundo"
         style="
@@ -491,13 +547,18 @@
         id="word-text"
         style="
           font-size:40px; font-weight:700; color:#001159;
-          font-family:'Quicksand',sans-serif; text-transform:lowercase;
+          font-family:'Quicksand',sans-serif;
           letter-spacing:-0.01em;
         "
       >&nbsp;</h2>
+      <!-- Modo palavra: caixas (uma por letra) + campo nativo oculto -->
+      <div id="spell-boxes" onclick="focusSpellInput()"></div>
+      <input id="spell-input" type="text" inputmode="text" autocomplete="off"
+        autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Digite a palavra"
+        style="opacity:0; width:0; height:0; border:0; padding:0; margin:0;" />
     </div>
 
-    <!-- Botões de letra -->
+    <!-- Botões de letra (modo letra) ou botão "mostrar palavra" (modo palavra) -->
     <div id="options-container" style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;"></div>
 
   </div>
@@ -1079,9 +1140,11 @@ const ACTIVITIES = {
   })
 };
 let currentActivity = ACTIVITIES.vowels;
+let gameMode        = 'letras';   // 'letras' (escolher letra) | 'palavras' (soletrar)
 
 // ─── Estado ───────────────────────────────────────────────────────────────────
 let deck          = [];
+let spellTarget   = null;   // { chars, letterTargets } da rodada no modo palavra
 let currentIndex  = 0;
 let score         = 0;
 let wrongCount    = 0;
@@ -1139,12 +1202,15 @@ function playWordAudio(word, onEnd) {
   mp3.play().catch(() => speakText(word.displayWord, onEnd));
 }
 
-// Enunciado compartilhado por todas as atividades: toca audio/enunciado_letra.*
-// (mp3/m4a/ogg) e, só se nenhum formato existir, fala o texto por TTS. Bloqueio
-// de autoplay NÃO cai no TTS — é resolvido pelo gesto/timeout em playRoundIntro.
-const ENUNCIADO_TEXT = 'Selecione a letra inicial da palavra';
-const ENUNCIADO_SRCS = ['audio/enunciado_letra.m4a', 'audio/enunciado_letra.mp3', 'audio/enunciado_letra.ogg'];
+// Enunciado por modo: toca audio/enunciado_<modo>.* (m4a/mp3/ogg) e, só se nenhum
+// formato existir, fala o texto por TTS. Bloqueio de autoplay NÃO cai no TTS — é
+// resolvido pelo gesto/timeout em playRoundIntro.
+const ENUNCIADOS = {
+  letras:   { srcs: ['audio/enunciado_letra.m4a',   'audio/enunciado_letra.mp3',   'audio/enunciado_letra.ogg'],   text: 'Selecione a letra inicial da palavra' },
+  palavras: { srcs: ['audio/enunciado_palavra.m4a', 'audio/enunciado_palavra.mp3', 'audio/enunciado_palavra.ogg'], text: 'Escute e escreva a palavra' },
+};
 function playEnunciado(onEnd, onStart) {
+  const { srcs, text } = ENUNCIADOS[gameMode] || ENUNCIADOS.letras;
   let settled = false;   // onEnd/fallback disparado uma única vez
   const audio = new Audio();
   if (onStart) audio.onplaying = onStart;
@@ -1152,11 +1218,11 @@ function playEnunciado(onEnd, onStart) {
   let i = 0;
   const tryNext = () => {
     if (settled) return;
-    if (i >= ENUNCIADO_SRCS.length) {           // nenhum formato existe → TTS
-      settled = true; speakText(ENUNCIADO_TEXT, onEnd, onStart); return;
+    if (i >= srcs.length) {                      // nenhum formato existe → TTS
+      settled = true; speakText(text, onEnd, onStart); return;
     }
-    audio.src = ENUNCIADO_SRCS[i++];
-    audio.play().catch(() => {});               // autoplay bloqueado → espera gesto/timeout
+    audio.src = srcs[i++];
+    audio.play().catch(() => {});                // autoplay bloqueado → espera gesto/timeout
   };
   audio.onerror = tryNext;                       // arquivo ausente/inválido → próximo formato
   tryNext();
@@ -1222,6 +1288,12 @@ function setButtonsEnabled(enabled) {
     btn.style.opacity = enabled ? '1' : '0.5';
     btn.style.cursor = enabled ? 'pointer' : 'not-allowed';
   });
+  if (gameMode === 'palavras') {
+    const input = document.getElementById('spell-input');
+    if (input) { input.disabled = !enabled; if (enabled && !answerLocked) input.focus(); }
+    const skip = document.getElementById('spell-skip');
+    if (skip) skip.style.visibility = enabled ? 'visible' : 'hidden';
+  }
 }
 
 function replayWordAudio() {
@@ -1301,26 +1373,128 @@ function loadRound(index) {
   wimg.onerror = tryNext;
   wimg.alt = currentWord.displayWord;
   tryNext();
-  document.getElementById('word-text').textContent = currentWord.displayWord;
   document.getElementById('progress-text').textContent = `${index + 1} / ${deck.length}`;
 
-  // Gerar botões
-  const container  = document.getElementById('options-container');
+  const wtext     = document.getElementById('word-text');
+  const boxes     = document.getElementById('spell-boxes');
+  const container = document.getElementById('options-container');
   container.innerHTML = '';
-  const opts = currentActivity.buildOptions(currentWord.vowel);
 
-  opts.forEach(letter => {
-    const btn = document.createElement('button');
-    btn.className = 'btn-letter';
-    btn.textContent = letter;
-    btn.dataset.letter = letter;
-    btn.addEventListener('click', () => handleGuess(letter, currentWord.vowel, btn));
-    container.appendChild(btn);
-  });
+  if (gameMode === 'palavras') {
+    // Soletração: esconde o nome, mostra as caixas e o botão "mostrar palavra".
+    wtext.style.display = 'none';
+    boxes.style.display = 'flex';
+    setupSpellRound();
+    const skip = document.createElement('button');
+    skip.id = 'spell-skip';
+    skip.textContent = 'mostrar palavra';
+    skip.addEventListener('click', spellReveal);
+    container.appendChild(skip);
+  } else {
+    // Modo letra: mostra o nome e os 3 botões de letra.
+    boxes.style.display = 'none';
+    wtext.style.display = '';
+    wtext.textContent   = currentWord.displayWord;
+    currentActivity.buildOptions(currentWord.vowel).forEach(letter => {
+      const btn = document.createElement('button');
+      btn.className = 'btn-letter';
+      btn.textContent = letter;
+      btn.dataset.letter = letter;
+      btn.addEventListener('click', () => handleGuess(letter, currentWord.vowel, btn));
+      container.appendChild(btn);
+    });
+  }
 
   setButtonsEnabled(false);
   // Áudio
   setTimeout(() => playRoundIntro(currentWord), 400);
+}
+
+// ─── Modo palavra (soletração) ─────────────────────────────────────────────────
+function isLetterChar(c) { return /\p{L}/u.test(c); }
+
+function setupSpellRound() {
+  const chars = [...currentWord.displayWord.normalize('NFC')];
+  spellTarget = { chars, letterTargets: chars.filter(isLetterChar) };
+  const input = document.getElementById('spell-input');
+  input.value = '';
+  input.disabled = true;                          // habilita após o enunciado
+  input.maxLength = spellTarget.letterTargets.length + 2;
+  renderSpellBoxes();
+}
+
+// Redesenha as caixas a partir do que foi digitado. Retorna true se a palavra
+// inteira está correta.
+function renderSpellBoxes() {
+  if (!spellTarget) return false;
+  const input = document.getElementById('spell-input');
+  const typed = [...input.value.normalize('NFC')].filter(isLetterChar);
+  const boxes = document.getElementById('spell-boxes');
+  boxes.innerHTML = '';
+  let slot = 0, allOk = true;
+  for (const ch of spellTarget.chars) {
+    const box = document.createElement('div');
+    box.className = 'spell-box';
+    if (!isLetterChar(ch)) {                       // hífen/espaço: já vêm dados
+      box.classList.add('given');
+      box.textContent = ch === ' ' ? ' ' : ch;
+    } else {
+      const t = typed[slot], target = spellTarget.letterTargets[slot];
+      if (t == null) { box.textContent = ''; allOk = false; }
+      else if (t.toLowerCase() === target.toLowerCase()) { box.classList.add('ok'); box.textContent = t; }
+      else { box.classList.add('bad'); box.textContent = t; allOk = false; }
+      slot++;
+    }
+    boxes.appendChild(box);
+  }
+  return typed.length === spellTarget.letterTargets.length && allOk;
+}
+
+function onSpellInput() {
+  if (gameMode !== 'palavras' || answerLocked || !currentWord || !spellTarget) return;
+  if (renderSpellBoxes()) spellSuccess();
+}
+
+function focusSpellInput() {
+  if (gameMode === 'palavras' && !answerLocked) document.getElementById('spell-input').focus();
+}
+
+function revealWordText() {
+  const wtext = document.getElementById('word-text');
+  wtext.textContent = currentWord.displayWord;
+  wtext.style.display = '';
+}
+
+function spellSuccess() {
+  if (answerLocked) return;
+  answerLocked = true;
+  score++;
+  document.getElementById('spell-input').disabled = true;
+  playSuccessSound();
+  spawnConfetti();
+  const card = document.getElementById('activity-card');
+  card.style.borderColor = '#298600';
+  card.style.boxShadow   = '0 10px 0 0 #298600';
+  setTimeout(() => card.classList.add('animate-bounce-once'), 50);
+  revealWordText();
+  setTimeout(() => playWordAudio(currentWord), 600);
+  setTimeout(advanceRound, 2200);
+}
+
+function spellReveal() {
+  if (answerLocked) return;
+  answerLocked = true;
+  document.getElementById('spell-input').disabled = true;
+  const boxes = document.getElementById('spell-boxes').querySelectorAll('.spell-box');
+  let bi = 0;
+  for (const ch of spellTarget.chars) {
+    const box = boxes[bi++];
+    if (!box) continue;
+    if (isLetterChar(ch)) { box.classList.remove('ok', 'bad'); box.classList.add('reveal'); box.textContent = ch; }
+  }
+  revealWordText();
+  setTimeout(() => playWordAudio(currentWord), 300);
+  setTimeout(advanceRound, 2200);
 }
 
 function handleGuess(letter, correct, btnEl) {
@@ -1432,14 +1606,23 @@ function selectXCH()    { selectActivity(ACTIVITIES.xch); }
 function selectKWY()    { selectActivity(ACTIVITIES.kwy); }
 function selectH()      { selectActivity(ACTIVITIES.h); }
 
+function setGameMode(m) {
+  gameMode = m;
+  document.getElementById('mode-letras').classList.toggle('active', m === 'letras');
+  document.getElementById('mode-palavras').classList.toggle('active', m === 'palavras');
+  applyBackground();
+}
+
 // ─── Fundo (liga/desliga imagem) ───────────────────────────────────────────────
 let bgOn = false;   // default: inicia sem imagem de fundo
-const BG_IMAGE   = "url('stitch_game_design_concepts/playful_and_colorful_forest_background_for_a_children_s_educational_game/screen.png')";
-const BG_NEUTRAL = "#dee1ff";
+const BG_IMAGE          = "url('stitch_game_design_concepts/playful_and_colorful_forest_background_for_a_children_s_educational_game/screen.png')";
+const BG_NEUTRAL_LETRAS  = "#dee1ff";   // lavanda — modo LETRAS
+const BG_NEUTRAL_PALAVRAS = "#d1f5d3";  // verde-menta — modo PALAVRAS
 
 function applyBackground() {
+  const neutral = gameMode === 'palavras' ? BG_NEUTRAL_PALAVRAS : BG_NEUTRAL_LETRAS;
   document.body.style.backgroundImage = bgOn ? BG_IMAGE : 'none';
-  document.body.style.backgroundColor = bgOn ? '' : BG_NEUTRAL;
+  document.body.style.backgroundColor = bgOn ? '' : neutral;
   document.querySelectorAll('.bg-toggle-btn').forEach(btn => {
     const icon = btn.querySelector('.material-symbols-outlined');
     if (icon) icon.textContent = bgOn ? 'image' : 'hide_image';
@@ -1448,6 +1631,20 @@ function applyBackground() {
 }
 
 function toggleBackground() { bgOn = !bgOn; applyBackground(); }
+
+// ─── Caixa alta / baixa das letras (padrão: alta) ──────────────────────────────
+let letterCase = 'upper';
+function applyLetterCase() {
+  const gs = document.getElementById('game-screen');
+  gs.classList.toggle('case-upper', letterCase === 'upper');
+  gs.classList.toggle('case-lower', letterCase === 'lower');
+  const btn = document.getElementById('case-toggle');
+  if (btn) btn.textContent = letterCase === 'upper' ? 'ABC' : 'abc';
+}
+function toggleLetterCase() {
+  letterCase = letterCase === 'upper' ? 'lower' : 'upper';
+  applyLetterCase();
+}
 
 // ─── Teclado ──────────────────────────────────────────────────────────────────
 // Letras simples disparam direto; dígrafos (ex.: CH) são digitados em 2 teclas:
@@ -1459,6 +1656,7 @@ function clickOption(letter) {
   if (btn) btn.click();
 }
 document.addEventListener('keydown', e => {
+  if (gameMode !== 'letras') return;   // modo palavra: a digitação vai pro campo nativo
   const key = e.key.toUpperCase();
   if (key.length !== 1 || key < 'A' || key > 'Z') return;
   const keys = currentActivity.keys;
@@ -1483,7 +1681,9 @@ document.addEventListener('keydown', e => {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener('click', () => initAudioCtx(), { once: true });
+  document.getElementById('spell-input').addEventListener('input', onSpellInput);
   applyBackground();   // default: sem imagem de fundo
+  applyLetterCase();   // default: caixa alta
   showMenu();          // inicia na tela de seleção
 });
 </script>
