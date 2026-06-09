@@ -1539,6 +1539,7 @@ function showEndScreen() {
 function startGame() {
   inGame = true;
   document.getElementById('end-screen').classList.add('hidden');
+  document.querySelector('#speech-overlay div').textContent = ENUNCIADOS[gameMode].text + '!';
   document.getElementById('speech-overlay').style.display = 'flex';
   enunciadoDone = false;
 
