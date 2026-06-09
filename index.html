@@ -246,7 +246,6 @@
             <span style="color:#e8423a">A</span><span style="color:#f59e0b">E</span><span style="color:#2bb24c">I</span><span style="color:#0058bd">O</span><span style="color:#8b3fc0">U</span>
           </div>
         </div>
-        <span class="tile-label">vogais</span>
       </button>
 
       <!-- Atividade ativa: F e V -->
@@ -256,7 +255,6 @@
             <span style="color:#0058bd">F</span><span style="color:#2bb24c">V</span>
           </div>
         </div>
-        <span class="tile-label">f e v</span>
       </button>
 
       <!-- Atividade ativa: M e N -->
@@ -266,7 +264,6 @@
             <span style="color:#e8423a">M</span><span style="color:#8b3fc0">N</span>
           </div>
         </div>
-        <span class="tile-label">m e n</span>
       </button>
 
       <!-- Atividade ativa: L e J -->
@@ -276,7 +273,6 @@
             <span style="color:#f59e0b">L</span><span style="color:#8b3fc0">J</span>
           </div>
         </div>
-        <span class="tile-label">l e j</span>
       </button>
 
       <!-- Atividade ativa: S e Z -->
@@ -286,7 +282,6 @@
             <span style="color:#0058bd">S</span><span style="color:#2bb24c">Z</span>
           </div>
         </div>
-        <span class="tile-label">s e z</span>
       </button>
 
       <!-- Atividade ativa: R forte -->
@@ -296,7 +291,6 @@
             <span style="color:#e8423a">R</span>
           </div>
         </div>
-        <span class="tile-label">r forte</span>
       </button>
 
       <!-- Atividade ativa: P B T D -->
@@ -306,7 +300,6 @@
             <span style="color:#e8423a">P</span><span style="color:#0058bd">B</span><span style="color:#2bb24c">T</span><span style="color:#f59e0b">D</span>
           </div>
         </div>
-        <span class="tile-label">p b t d</span>
       </button>
 
       <!-- Atividade ativa: C e G (ca co cu / ga go gu) -->
@@ -316,7 +309,6 @@
             <span style="color:#0058bd">C</span><span style="color:#2bb24c">G</span>
           </div>
         </div>
-        <span class="tile-label">c e g</span>
       </button>
 
       <!-- Atividade ativa: Q -->
@@ -326,7 +318,6 @@
             <span style="color:#8b3fc0">Q</span>
           </div>
         </div>
-        <span class="tile-label">q</span>
       </button>
 
       <!-- Atividade ativa: X e CH -->
@@ -336,7 +327,6 @@
             <span style="color:#e8423a">X</span><span style="color:#0058bd">CH</span>
           </div>
         </div>
-        <span class="tile-label">x e ch</span>
       </button>
 
       <!-- Atividade ativa: K W Y -->
@@ -346,7 +336,6 @@
             <span style="color:#2bb24c">K</span><span style="color:#f59e0b">W</span><span style="color:#8b3fc0">Y</span>
           </div>
         </div>
-        <span class="tile-label">k w y</span>
       </button>
 
       <!-- Atividade ativa: H -->
@@ -356,7 +345,6 @@
             <span style="color:#e8423a">H</span>
           </div>
         </div>
-        <span class="tile-label">h</span>
       </button>
     </div>
   </main>
@@ -1476,8 +1464,7 @@ function spellSuccess() {
   card.style.borderColor = '#298600';
   card.style.boxShadow   = '0 10px 0 0 #298600';
   setTimeout(() => card.classList.add('animate-bounce-once'), 50);
-  revealWordText();
-  setTimeout(() => playWordAudio(currentWord), 600);
+  setTimeout(() => playWordAudio(currentWord), 200);
   setTimeout(advanceRound, 2200);
 }
 
