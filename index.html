@@ -516,7 +516,7 @@
     onmouseenter="this.style.transform='scale(1.03)'"
     onmouseleave="this.style.transform='scale(1)'"
   >
-    <img id="character-img" src="" alt="Personagem" style="width:320px; height:auto; display:block;" />
+    <img id="character-img" src="" alt="Personagem" style="width:360px; height:auto; display:block;" />
   </div>
 </div>
 
@@ -1312,7 +1312,9 @@ function getThemeChar() {
 function loadRound(index) {
   if (!inGame) return;            // saiu para o menu: aborta a rodada pendente
   currentWord  = deck[index];
-  document.getElementById('character-img').src = getThemeChar();
+  const charSrc = getThemeChar();
+  document.getElementById('character-img').src = charSrc;
+  document.getElementById('character-group').parentElement.style.right = gameMode === 'palavras' ? '120px' : '0';
   wrongCount   = 0;
   answerLocked = false;
 
