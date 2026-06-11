@@ -434,19 +434,6 @@
 <!-- ── Jogo ─────────────────────────────────────────────────────────────────── -->
 <main class="flex flex-col md:flex-row items-center justify-center gap-10 px-4 py-6 max-w-5xl mx-auto min-h-[calc(100vh-80px)]">
 
-  <!-- Personagem -->
-  <div class="animate-bounce-sm flex-shrink-0">
-    <div
-      id="character-group"
-      onclick="replayWordAudio()"
-      style="cursor:pointer; transition:transform 0.1s;"
-      onmouseenter="this.style.transform='scale(1.05)'"
-      onmouseleave="this.style.transform='scale(1)'"
-    >
-      <img id="character-img" src="" alt="Personagem" style="width:240px; height:auto; display:block;" />
-    </div>
-  </div>
-
   <!-- Área da atividade -->
   <div class="glass rounded-3xl p-6 flex flex-col items-center gap-6 w-full max-w-md shadow-xl">
 
@@ -519,6 +506,19 @@
 
   </div>
 </main>
+
+<!-- ── Personagem do jogo (fixo no canto direito) ────────────────────────── -->
+<div style="position:fixed; right:0; bottom:0; z-index:40; pointer-events:none;">
+  <div
+    id="character-group"
+    onclick="replayWordAudio()"
+    style="cursor:pointer; transition:transform 0.1s; pointer-events:auto;"
+    onmouseenter="this.style.transform='scale(1.03)'"
+    onmouseleave="this.style.transform='scale(1)'"
+  >
+    <img id="character-img" src="" alt="Personagem" style="width:320px; height:auto; display:block;" />
+  </div>
+</div>
 
 </div><!-- /#game-screen -->
 
