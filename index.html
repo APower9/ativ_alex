@@ -202,6 +202,33 @@
   #game-screen.case-lower .btn-letter,
   #game-screen.case-lower #word-text,
   #game-screen.case-lower .spell-box { text-transform: lowercase; }
+
+  /* ── Personagem do menu (tema) ───────────────────────────────── */
+  #menu-character {
+    position: fixed; bottom: 24px; right: 24px; z-index: 50;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    pointer-events: none;
+  }
+  #menu-speech-bubble {
+    background: #fff; border: 3px solid #0058bd; border-radius: 16px;
+    padding: 10px 14px; box-shadow: 0 4px 0 0 #0058bd;
+    font-size: 14px; font-weight: 700; color: #0058bd;
+    max-width: 160px; text-align: center; line-height: 1.4;
+    font-family: "Quicksand", sans-serif; position: relative;
+  }
+  #menu-speech-bubble::before {
+    content: ""; position: absolute; bottom: -12px; left: 50%;
+    transform: translateX(-50%); width: 0; height: 0;
+    border-left: 10px solid transparent; border-right: 10px solid transparent;
+    border-top: 12px solid #0058bd;
+  }
+  #menu-speech-bubble::after {
+    content: ""; position: absolute; bottom: -8px; left: 50%;
+    transform: translateX(-50%); width: 0; height: 0;
+    border-left: 8px solid transparent; border-right: 8px solid transparent;
+    border-top: 9px solid #fff;
+  }
+  #menu-char-img { width: 360px; height: auto; display: block; }
 </style>
 </head>
 
@@ -348,6 +375,12 @@
       </button>
     </div>
   </main>
+
+  <!-- ── Personagem do tema ──────────────────────────────────────────────────── -->
+  <div id="menu-character">
+    <div id="menu-speech-bubble"></div>
+    <img id="menu-char-img" src="" alt="Personagem do tema" />
+  </div>
 </div>
 
 <!-- ── Jogo (tela) ───────────────────────────────────────────────────────────── -->
@@ -402,80 +435,15 @@
 <main class="flex flex-col md:flex-row items-center justify-center gap-10 px-4 py-6 max-w-5xl mx-auto min-h-[calc(100vh-80px)]">
 
   <!-- Personagem -->
-  <div
-    class="animate-bounce-sm flex-shrink-0"
-    style="position:relative; width:180px;"
-  >
-    <div id="speech-bubble" style="display:none;">Selecione a letra inicial da palavra!</div>
-
-    <!-- Grupo do personagem: disco (moldura) + menino "saindo" do círculo -->
+  <div class="animate-bounce-sm flex-shrink-0">
     <div
       id="character-group"
       onclick="replayWordAudio()"
-      style="
-        position:relative; width:180px; height:225px;
-        cursor:pointer; transition:transform 0.1s;
-      "
+      style="cursor:pointer; transition:transform 0.1s;"
       onmouseenter="this.style.transform='scale(1.05)'"
       onmouseleave="this.style.transform='scale(1)'"
     >
-      <!-- Disco amarelo (moldura) — fica atrás e recorta o fallback SVG -->
-      <div
-        id="character-btn"
-        style="
-          position:absolute; top:45px; left:0;
-          width:180px; height:180px; border-radius:9999px;
-          background:#fcbc05; border:4px solid #7a5900;
-          box-shadow:0 8px 0 0 #7a5900;
-          display:flex; align-items:center; justify-content:center;
-          overflow:hidden;
-        "
-      >
-      <svg
-        id="menino-rosto"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="24 3 52 52"
-        style="width:176px;height:176px;display:none;"
-      >
-        <ellipse cx="50" cy="20" rx="22" ry="17" fill="#4a2408"/>
-        <circle cx="50" cy="26" r="20" fill="#FDBCB4"/>
-        <path d="M30 20 Q34 11 50 11 Q66 11 70 20 Q64 15 50 15 Q36 15 30 20Z" fill="#4a2408"/>
-        <circle cx="43" cy="24" r="3" fill="#222"/>
-        <circle cx="57" cy="24" r="3" fill="#222"/>
-        <circle cx="44" cy="23" r="1.2" fill="white"/>
-        <circle cx="58" cy="23" r="1.2" fill="white"/>
-        <ellipse cx="37" cy="31" rx="5" ry="3" fill="#f4a0a0" opacity="0.55"/>
-        <ellipse cx="63" cy="31" rx="5" ry="3" fill="#f4a0a0" opacity="0.55"/>
-        <path d="M43 32 Q50 39 57 32" fill="none" stroke="#b06060" stroke-width="2" stroke-linecap="round"/>
-        <rect x="44" y="45" width="12" height="7" fill="#FDBCB4"/>
-        <path d="M22 88 L22 54 Q22 52 25 51 L38 48 L50 53 L62 48 L75 51 Q78 52 78 54 L78 88 Q78 90 75 90 L25 90 Q22 90 22 88Z" fill="#2a7de1"/>
-        <path d="M38 49 L50 56 L62 49" fill="none" stroke="white" stroke-width="2"/>
-      </svg>
-      </div>
-
-      <!-- Menino "saindo" do círculo: máscara = disco ∪ faixa superior (cabeça + varinha pra fora) -->
-      <img
-        id="character-img"
-        src="img/personagem_alfabeto.png"
-        alt="Personagem"
-        style="
-          position:absolute; width:420px; height:auto; max-width:none;
-          left:-121px; top:8px; pointer-events:none;
-          -webkit-mask:
-            radial-gradient(circle 88px at 211px 127px, #000 100%, rgba(0,0,0,0) 100%),
-            linear-gradient(#000, #000);
-          -webkit-mask-size:auto, 90px 92px;
-          -webkit-mask-position:0 0, 166px 0;
-          -webkit-mask-repeat:no-repeat,no-repeat;
-          mask:
-            radial-gradient(circle 88px at 211px 127px, #000 100%, rgba(0,0,0,0) 100%),
-            linear-gradient(#000, #000);
-          mask-size:auto, 90px 92px;
-          mask-position:0 0, 166px 0;
-          mask-repeat:no-repeat,no-repeat;
-        "
-        onerror="this.style.display='none';document.getElementById('menino-rosto').style.display='block';"
-      />
+      <img id="character-img" src="" alt="Personagem" style="width:240px; height:auto; display:block;" />
     </div>
   </div>
 
@@ -1336,9 +1304,15 @@ function spawnConfetti() {
 }
 
 // ─── Rodada ───────────────────────────────────────────────────────────────────
+function getThemeChar() {
+  const tema = TEMAS[gameMode] || TEMAS.letras;
+  return tema.chars[Math.floor(Math.random() * tema.chars.length)];
+}
+
 function loadRound(index) {
   if (!inGame) return;            // saiu para o menu: aborta a rodada pendente
   currentWord  = deck[index];
+  document.getElementById('character-img').src = getThemeChar();
   wrongCount   = 0;
   answerLocked = false;
 
@@ -1559,22 +1533,13 @@ function showMenu() {
   document.getElementById('end-screen').classList.add('hidden');
   document.getElementById('speech-overlay').style.display = 'none';
   document.getElementById('menu-screen').style.display = '';
-}
-
-function applyCharStyle(img, s) {
-  Object.assign(img.style, {
-    width:s.width, left:s.left, top:s.top,
-    mask:s.mask, maskSize:s.maskSize, maskPosition:s.maskPosition, maskRepeat:s.maskRepeat,
-    WebkitMask:s.mask, WebkitMaskSize:s.maskSize, WebkitMaskPosition:s.maskPosition, WebkitMaskRepeat:s.maskRepeat
-  });
+  applyBackground();
+  updateMenuCharacter();
 }
 
 function selectActivity(activity) {
   currentActivity = activity;
   document.getElementById('game-title').textContent = activity.title;
-  const charImg = document.getElementById('character-img');
-  charImg.src = activity.character;
-  applyCharStyle(charImg, activity.charStyle);
   inGame = true;
   document.getElementById('menu-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = '';
@@ -1599,17 +1564,39 @@ function setGameMode(m) {
   document.getElementById('mode-letras').classList.toggle('active', m === 'letras');
   document.getElementById('mode-palavras').classList.toggle('active', m === 'palavras');
   applyBackground();
+  updateMenuCharacter();
 }
 
-// ─── Fundo (liga/desliga imagem) ───────────────────────────────────────────────
-let bgOn = false;   // default: inicia sem imagem de fundo
-const BG_IMAGE          = "url('stitch_game_design_concepts/playful_and_colorful_forest_background_for_a_children_s_educational_game/screen.png')";
-const BG_NEUTRAL_LETRAS  = "#dee1ff";   // lavanda — modo LETRAS
-const BG_NEUTRAL_PALAVRAS = "#d1f5d3";  // verde-menta — modo PALAVRAS
+// ─── Temas (personagens e fundos por modo) ────────────────────────────────────
+const TEMAS = {
+  letras: {
+    bg:       'temas/tres_porquinhos/background_porquinhos.png',
+    chars:    ['temas/tres_porquinhos/porquinho_palha.png','temas/tres_porquinhos/porquinho_madeira.png','temas/tres_porquinhos/porquinho_tijolo.png'],
+    frase:    'Me ajude com as letras!!',
+    audio:    'audio/saudacao_letras.mp3',
+    countKey: 'letrasGreetCount'
+  },
+  palavras: {
+    bg:       'temas/chapeuzinho/background_chapeuzinho.png',
+    chars:    ['temas/chapeuzinho/chapeuzinho.png','temas/chapeuzinho/lobo_chapeuzinho.png','temas/chapeuzinho/vovo_chapeuzinho.png'],
+    frase:    'Me ajude com as palavras.',
+    audio:    'audio/saudacao_palavras.mp3',
+    countKey: 'palavrasGreetCount'
+  }
+};
+
+// ─── Fundo (liga/desliga imagem de tema) ──────────────────────────────────────
+let bgOn = true;   // default: mostra imagem de tema
+const BG_NEUTRAL_LETRAS   = "#dee1ff";   // lavanda — modo LETRAS
+const BG_NEUTRAL_PALAVRAS = "#d1f5d3";   // verde-menta — modo PALAVRAS
+
+function themeBgUrl() {
+  return `url('${(TEMAS[gameMode] || TEMAS.letras).bg}')`;
+}
 
 function applyBackground() {
   const neutral = gameMode === 'palavras' ? BG_NEUTRAL_PALAVRAS : BG_NEUTRAL_LETRAS;
-  document.body.style.backgroundImage = bgOn ? BG_IMAGE : 'none';
+  document.body.style.backgroundImage = bgOn ? themeBgUrl() : 'none';
   document.body.style.backgroundColor = bgOn ? '' : neutral;
   document.querySelectorAll('.bg-toggle-btn').forEach(btn => {
     const icon = btn.querySelector('.material-symbols-outlined');
@@ -1619,6 +1606,25 @@ function applyBackground() {
 }
 
 function toggleBackground() { bgOn = !bgOn; applyBackground(); }
+
+// ─── Personagem do menu ───────────────────────────────────────────────────────
+function updateMenuCharacter() {
+  const tema   = TEMAS[gameMode] || TEMAS.letras;
+  const img    = document.getElementById('menu-char-img');
+  const bubble = document.getElementById('menu-speech-bubble');
+  if (!img || !bubble) return;
+  img.src            = tema.chars[Math.floor(Math.random() * tema.chars.length)];
+  bubble.textContent = tema.frase;
+  const count = parseInt(localStorage.getItem(tema.countKey) || '0');
+  localStorage.setItem(tema.countKey, count + 1);
+  if (count < 3) playMenuGreeting(tema);
+}
+
+function playMenuGreeting(tema) {
+  const audio = new Audio(tema.audio);
+  audio.onerror = () => speakText(tema.frase);
+  audio.play().catch(() => speakText(tema.frase));
+}
 
 // ─── Caixa alta / baixa das letras (padrão: alta) ──────────────────────────────
 let letterCase = 'upper';
@@ -1670,9 +1676,8 @@ document.addEventListener('keydown', e => {
 document.addEventListener('DOMContentLoaded', () => {
   document.body.addEventListener('click', () => initAudioCtx(), { once: true });
   document.getElementById('spell-input').addEventListener('input', onSpellInput);
-  applyBackground();   // default: sem imagem de fundo
   applyLetterCase();   // default: caixa alta
-  showMenu();          // inicia na tela de seleção
+  showMenu();          // inicia na tela de seleção (chama applyBackground + updateMenuCharacter)
 });
 </script>
 </body>
