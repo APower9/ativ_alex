@@ -884,6 +884,19 @@ const GRP_GAP_CH = [
   lacunaWord('machado','machado','ch'),   lacunaWord('recheio','recheio','ch'),
 ];
 
+const GRP_GAP_QUGU = [
+  lacunaWord('queijo','queijo','qu'),     lacunaWord('quente','quente','qu'),
+  lacunaWord('quilo','quilo','qu'),       lacunaWord('quintal','quintal','qu'),
+  lacunaWord('quiabo','quiabo','qu'),     lacunaWord('aqui','aqui','qu'),
+  lacunaWord('esquilo','esquilo','qu'),   lacunaWord('parque','parque','qu'),
+  lacunaWord('maquina','máquina','qu'),   lacunaWord('pequeno','pequeno','qu'),
+  lacunaWord('guerra','guerra','gu'),     lacunaWord('guitarra','guitarra','gu'),
+  lacunaWord('guarda','guarda','gu'),     lacunaWord('guia','guia','gu'),
+  lacunaWord('aguia','águia','gu'),       lacunaWord('linguica','linguiça','gu'),
+  lacunaWord('sangue','sangue','gu'),     lacunaWord('pinguim','pinguim','gu'),
+  lacunaWord('seguir','seguir','gu'),     lacunaWord('ninguem','ninguém','gu'),
+];
+
 const GRP_GAP_RRSS = [
   lacunaWord('arrepio','arrepio','rr'),   lacunaWord('arrumar','arrumar','rr'),
   lacunaWord('arroz','arroz','rr'),       lacunaWord('barriga','barriga','rr'),
@@ -1150,6 +1163,7 @@ const GAP_ACTIVITIES = {
   gap_lh:   gapActivity({ title: 'LH',                  words: GRP_GAP_LH }),
   gap_ch:   gapActivity({ title: 'CH',                  words: GRP_GAP_CH }),
   gap_rrss: gapActivity({ title: 'RR e SS',             words: GRP_GAP_RRSS }),
+  gap_qugu: gapActivity({ title: 'QU e GU',            words: GRP_GAP_QUGU }),
 };
 
 function selectGapActivity(key) { selectActivity(GAP_ACTIVITIES[key]); }
@@ -1680,13 +1694,14 @@ function renderMenuTiles() {
   if (gameMode === 'lacuna' || gameMode === 'complete') {
     const entries = [
       { key:'gap_r',    parts:[['R','#e8423a']] },
-      { key:'gap_sz',   parts:[['S','#0058bd'],['e','#001159'],['Z','#2bb24c']] },
-      { key:'gap_cg',   parts:[['C','#0058bd'],['e','#001159'],['G','#2bb24c']] },
-      { key:'gap_cs',   parts:[['Ç','#f59e0b'],['e','#001159'],['SC','#8b3fc0']] },
+      { key:'gap_sz',   parts:[['S','#0058bd'],['-','#001159'],['Z','#2bb24c']] },
+      { key:'gap_cg',   parts:[['C','#0058bd'],['-','#001159'],['G','#2bb24c']] },
+      { key:'gap_cs',   parts:[['Ç','#f59e0b'],['-','#001159'],['SC','#8b3fc0']] },
       { key:'gap_nh',   parts:[['NH','#e8423a']] },
       { key:'gap_lh',   parts:[['LH','#2bb24c']] },
       { key:'gap_ch',   parts:[['CH','#0058bd']] },
-      { key:'gap_rrss', parts:[['RR','#e8423a'],['e','#001159'],['SS','#f59e0b']] },
+      { key:'gap_rrss', parts:[['RR','#e8423a'],['-','#001159'],['SS','#f59e0b']] },
+      { key:'gap_qugu', parts:[['QU','#8b3fc0'],['-','#001159'],['GU','#f59e0b']] },
     ];
     for (const e of entries) {
       const btn = document.createElement('button');
