@@ -162,21 +162,29 @@
     display: flex; gap: 2px; font-weight: 700; font-family: "Quicksand", sans-serif;
     font-size: clamp(22px, 7vw, 42px); line-height: 1;
   }
-  /* Toggle de modo (LETRAS / PALAVRAS / LACUNA / COMPLETE) no lado esquerdo do menu */
+  /* Toggle de modo (7 botões) no lado esquerdo do menu */
   #mode-toggle {
     position: fixed; left: 16px; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; gap: 8px; z-index: 60;
+    display: flex; flex-direction: column; gap: 5px; z-index: 60;
   }
   .mode-btn {
-    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 13px;
-    letter-spacing: 0.05em; padding: 12px 10px; min-width: 96px; border-radius: 16px;
+    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 11px;
+    letter-spacing: 0.04em; padding: 8px 8px; min-width: 84px; border-radius: 12px;
     border: 3px solid #0058bd; background: #fff; color: #0058bd; cursor: pointer;
-    box-shadow: 0 5px 0 0 #0058bd; transition: transform .1s, background .15s, color .15s;
+    box-shadow: 0 4px 0 0 #0058bd; transition: transform .1s, background .15s, color .15s;
   }
   .mode-btn:hover  { transform: scale(1.03); }
-  .mode-btn:active { box-shadow: 0 0 0 0 #0058bd; transform: translateY(5px); }
+  .mode-btn:active { box-shadow: 0 0 0 0 #0058bd; transform: translateY(4px); }
   .mode-btn.active { background: #0058bd; color: #fff; }
-  @media (max-width: 640px) { #mode-toggle { left: 6px; } .mode-btn { min-width: 72px; padding: 10px 6px; font-size: 11px; } }
+  @media (max-width: 640px) { #mode-toggle { left: 4px; } .mode-btn { min-width: 64px; padding: 6px 4px; font-size: 9px; } }
+  /* Chips de letras embaralhadas */
+  #scramble-chips { display: none; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 6px; }
+  .scramble-chip {
+    width: 34px; height: 46px; border-radius: 8px; border: 3px solid #f59e0b; background: #fff9e6;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 700; color: #b26b00;
+    font-family: "Quicksand", sans-serif; text-transform: lowercase;
+  }
   /* Caixas de soletração (modo palavra) */
   #spell-boxes { display: none; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 6px; }
   .spell-box {
@@ -243,10 +251,13 @@
 <div id="menu-screen">
   <!-- Modo de jogo: escolher letra inicial (LETRAS) ou soletrar (PALAVRAS) -->
   <div id="mode-toggle">
-    <button id="mode-letras"   class="mode-btn active" onclick="setGameMode('letras')">LETRAS</button>
-    <button id="mode-palavras" class="mode-btn"        onclick="setGameMode('palavras')">PALAVRAS</button>
-    <button id="mode-lacuna"   class="mode-btn"        onclick="setGameMode('lacuna')">LACUNA</button>
-    <button id="mode-complete" class="mode-btn"        onclick="setGameMode('complete')">COMPLETE</button>
+    <button id="mode-letras"      class="mode-btn active" onclick="setGameMode('letras')">LETRAS</button>
+    <button id="mode-vogais"      class="mode-btn"        onclick="setGameMode('vogais')">VOGAIS</button>
+    <button id="mode-consoantes"  class="mode-btn"        onclick="setGameMode('consoantes')">CONSOANTES</button>
+    <button id="mode-embaralhado" class="mode-btn"        onclick="setGameMode('embaralhado')">EMBARALHADO</button>
+    <button id="mode-palavras"    class="mode-btn"        onclick="setGameMode('palavras')">PALAVRAS</button>
+    <button id="mode-lacuna"      class="mode-btn"        onclick="setGameMode('lacuna')">LACUNA</button>
+    <button id="mode-complete"    class="mode-btn"        onclick="setGameMode('complete')">COMPLETE</button>
   </div>
   <header class="w-full px-4 pt-4 pb-2">
     <div class="glass rounded-full px-6 py-3 flex justify-between items-center max-w-5xl mx-auto shadow-sm">
@@ -388,6 +399,8 @@
           letter-spacing:-0.01em;
         "
       >&nbsp;</h2>
+      <!-- Chips de letras embaralhadas (modo embaralhado) -->
+      <div id="scramble-chips"></div>
       <!-- Modo palavra: caixas (uma por letra) + campo nativo oculto -->
       <div id="spell-boxes" onclick="focusSpellInput()"></div>
       <input id="spell-input" type="text" inputmode="text" autocomplete="off"
@@ -897,6 +910,128 @@ const GRP_GAP_QUGU = [
   lacunaWord('seguir','seguir','gu'),     lacunaWord('ninguem','ninguém','gu'),
 ];
 
+// ─── Palavras dos modos VOGAIS / CONSOANTES / EMBARALHADO ────────────────────
+function simpleWord(baseName, displayWord) {
+  return { baseName, displayWord, imageCandidates: [`img/${baseName}.png`] };
+}
+
+const GRP_VCE_PB = [
+  simpleWord('pato','pato'),    simpleWord('pipa','pipa'),    simpleWord('pote','pote'),
+  simpleWord('polo','polo'),    simpleWord('pena','pena'),    simpleWord('peru','peru'),
+  simpleWord('pano','pano'),    simpleWord('pico','pico'),    simpleWord('pele','pele'),
+  simpleWord('pula','pula'),
+  simpleWord('bolo','bolo'),    simpleWord('bola','bola'),    simpleWord('boca','boca'),
+  simpleWord('bode','bode'),    simpleWord('boto','boto'),    simpleWord('bule','bule'),
+  simpleWord('bata','bata'),    simpleWord('bico','bico'),    simpleWord('bela','bela'),
+  simpleWord('bife','bife'),
+];
+const GRP_VCE_TD = [
+  simpleWord('tatu','tatu'),    simpleWord('tela','tela'),    simpleWord('toco','toco'),
+  simpleWord('tubo','tubo'),    simpleWord('tipo','tipo'),    simpleWord('tira','tira'),
+  simpleWord('toca','toca'),    simpleWord('tome','tome'),    simpleWord('tiro','tiro'),
+  simpleWord('tuba','tuba'),
+  simpleWord('dado','dado'),    simpleWord('dedo','dedo'),    simpleWord('dica','dica'),
+  simpleWord('dona','dona'),    simpleWord('dose','dose'),    simpleWord('duna','duna'),
+  simpleWord('dote','dote'),    simpleWord('data','data'),    simpleWord('dama','dama'),
+  simpleWord('diva','diva'),
+];
+const GRP_VCE_FV = [
+  simpleWord('faca','faca'),    simpleWord('fada','fada'),    simpleWord('fato','fato'),
+  simpleWord('figo','figo'),    simpleWord('fila','fila'),    simpleWord('fita','fita'),
+  simpleWord('foca','foca'),    simpleWord('fogo','fogo'),    simpleWord('fome','fome'),
+  simpleWord('foto','foto'),
+  simpleWord('vaca','vaca'),    simpleWord('vara','vara'),    simpleWord('vaso','vaso'),
+  simpleWord('vela','vela'),    simpleWord('vida','vida'),    simpleWord('vime','vime'),
+  simpleWord('vivo','vivo'),    simpleWord('voo','voo'),      simpleWord('voto','voto'),
+  simpleWord('voz','voz'),
+];
+const GRP_VCE_MN = [
+  simpleWord('mapa','mapa'),    simpleWord('mala','mala'),    simpleWord('mata','mata'),
+  simpleWord('mesa','mesa'),    simpleWord('mico','mico'),    simpleWord('mola','mola'),
+  simpleWord('mula','mula'),    simpleWord('mudo','mudo'),    simpleWord('mina','mina'),
+  simpleWord('mota','mota'),
+  simpleWord('nabo','nabo'),    simpleWord('neto','neto'),    simpleWord('neve','neve'),
+  simpleWord('nuca','nuca'),    simpleWord('nota','nota'),    simpleWord('nulo','nulo'),
+  simpleWord('nave','nave'),    simpleWord('nada','nada'),    simpleWord('nariz','nariz'),
+  simpleWord('navio','navio'),
+];
+const GRP_VCE_LR = [
+  simpleWord('lama','lama'),    simpleWord('lata','lata'),    simpleWord('lema','lema'),
+  simpleWord('lima','lima'),    simpleWord('lona','lona'),    simpleWord('lote','lote'),
+  simpleWord('lula','lula'),    simpleWord('lume','lume'),    simpleWord('logo','logo'),
+  simpleWord('lobo','lobo'),
+  simpleWord('rato','rato'),    simpleWord('remo','remo'),    simpleWord('roda','roda'),
+  simpleWord('rosa','rosa'),    simpleWord('rua','rua'),      simpleWord('rede','rede'),
+  simpleWord('ralo','ralo'),    simpleWord('rico','rico'),    simpleWord('rumo','rumo'),
+  simpleWord('rude','rude'),
+];
+const GRP_VCE_AEIOU = [
+  simpleWord('asa','asa'),      simpleWord('ato','ato'),      simpleWord('aba','aba'),
+  simpleWord('arco','arco'),    simpleWord('arma','arma'),    simpleWord('aula','aula'),
+  simpleWord('ela','ela'),      simpleWord('elo','elo'),      simpleWord('era','era'),
+  simpleWord('erro','erro'),
+  simpleWord('ida','ida'),      simpleWord('ilha','ilha'),    simpleWord('isso','isso'),
+  simpleWord('ovo','ovo'),      simpleWord('orca','orca'),    simpleWord('olho','olho'),
+  simpleWord('ouro','ouro'),
+  simpleWord('uso','uso'),      simpleWord('uva','uva'),      simpleWord('urso','urso'),
+];
+const GRP_VCE_JZKWY = [
+  simpleWord('jato','jato'),    simpleWord('juba','juba'),    simpleWord('judo','judo'),
+  simpleWord('jogo','jogo'),    simpleWord('joia','joia'),    simpleWord('jaca','jaca'),
+  simpleWord('jade','jade'),    simpleWord('janta','janta'),  simpleWord('jaula','jaula'),
+  simpleWord('jipe','jipe'),
+  simpleWord('zero','zero'),    simpleWord('zona','zona'),    simpleWord('zinco','zinco'),
+  simpleWord('zebra','zebra'),  simpleWord('zumo','zumo'),
+  simpleWord('kiwi','kiwi'),    simpleWord('kart','kart'),
+  simpleWord('web','web'),
+  simpleWord('yoga','yoga'),    simpleWord('xis','xis'),
+];
+const GRP_VCE_CKQ = [
+  simpleWord('cama','cama'),    simpleWord('cana','cana'),    simpleWord('capa','capa'),
+  simpleWord('cara','cara'),    simpleWord('casa','casa'),    simpleWord('cola','cola'),
+  simpleWord('copa','copa'),    simpleWord('coro','coro'),    simpleWord('cubo','cubo'),
+  simpleWord('cura','cura'),    simpleWord('caju','caju'),    simpleWord('cabo','cabo'),
+  simpleWord('cota','cota'),
+  simpleWord('kiwi','kiwi'),    simpleWord('kart','kart'),
+  simpleWord('queijo','queijo'),simpleWord('quilo','quilo'),  simpleWord('queda','queda'),
+  simpleWord('quero','quero'),  simpleWord('quibe','quibe'),
+];
+const GRP_VCE_AMN = [
+  simpleWord('mao','mão'),      simpleWord('mae','mãe'),      simpleWord('manha','manhã'),
+  simpleWord('manga','manga'),  simpleWord('manto','manto'),  simpleWord('mina','mina'),
+  simpleWord('mono','mono'),    simpleWord('mula','mula'),    simpleWord('manta','manta'),
+  simpleWord('mapa','mapa'),
+  simpleWord('nao','não'),      simpleWord('nacao','nação'),  simpleWord('nada','nada'),
+  simpleWord('navio','navio'),  simpleWord('neto','neto'),    simpleWord('neve','neve'),
+  simpleWord('ninho','ninho'),  simpleWord('nota','nota'),    simpleWord('nuca','nuca'),
+  simpleWord('nariz','nariz'),
+];
+const GRP_VCE_RS = [
+  simpleWord('rato','rato'),    simpleWord('remo','remo'),    simpleWord('roda','roda'),
+  simpleWord('rosa','rosa'),    simpleWord('rua','rua'),      simpleWord('rede','rede'),
+  simpleWord('ralo','ralo'),    simpleWord('rico','rico'),    simpleWord('rumo','rumo'),
+  simpleWord('rude','rude'),
+  simpleWord('sala','sala'),    simpleWord('saco','saco'),    simpleWord('saia','saia'),
+  simpleWord('sapo','sapo'),    simpleWord('sopa','sopa'),    simpleWord('solo','solo'),
+  simpleWord('sino','sino'),    simpleWord('silo','silo'),    simpleWord('seco','seco'),
+  simpleWord('sul','sul'),
+];
+const GRP_VCE_X = [
+  simpleWord('xale','xale'),    simpleWord('xampu','xampu'),  simpleWord('xadrez','xadrez'),
+  simpleWord('xerife','xerife'),simpleWord('xis','xis'),      simpleWord('xixi','xixi'),
+  simpleWord('xeque','xeque'),  simpleWord('xaxim','xaxim'),
+];
+const GRP_VCE_HC = [
+  simpleWord('hora','hora'),    simpleWord('horta','horta'),  simpleWord('hotel','hotel'),
+  simpleWord('homem','homem'),  simpleWord('honra','honra'),  simpleWord('hino','hino'),
+  simpleWord('haste','haste'),
+  simpleWord('laco','laço'),    simpleWord('poco','poço'),    simpleWord('traco','traço'),
+  simpleWord('graca','graça'),  simpleWord('forca','força'),  simpleWord('praca','praça'),
+  simpleWord('moca','moça'),    simpleWord('peca','peça'),    simpleWord('roca','roça'),
+  simpleWord('alca','alça'),    simpleWord('berco','berço'),  simpleWord('maco','maço'),
+  simpleWord('caca','caça'),
+];
+
 const GRP_GAP_RRSS = [
   lacunaWord('arrepio','arrepio','rr'),   lacunaWord('arrumar','arrumar','rr'),
   lacunaWord('arroz','arroz','rr'),       lacunaWord('barriga','barriga','rr'),
@@ -1168,8 +1303,68 @@ const GAP_ACTIVITIES = {
 
 function selectGapActivity(key) { selectActivity(GAP_ACTIVITIES[key]); }
 
+function simpleActivity({ title, words }) {
+  return {
+    title,
+    buildDeck() {
+      const shuffled = [...words].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, Math.min(ROUND_SIZE, shuffled.length));
+    }
+  };
+}
+
+const VCE_ACTIVITIES = {
+  vce_pb:    simpleActivity({ title: 'P e B',       words: GRP_VCE_PB }),
+  vce_td:    simpleActivity({ title: 'T e D',       words: GRP_VCE_TD }),
+  vce_fv:    simpleActivity({ title: 'F e V',       words: GRP_VCE_FV }),
+  vce_mn:    simpleActivity({ title: 'M e N',       words: GRP_VCE_MN }),
+  vce_lr:    simpleActivity({ title: 'L e R',       words: GRP_VCE_LR }),
+  vce_aeiou: simpleActivity({ title: 'A E I O U',  words: GRP_VCE_AEIOU }),
+  vce_jzkwy: simpleActivity({ title: 'J Z K W Y',  words: GRP_VCE_JZKWY }),
+  vce_ckq:   simpleActivity({ title: 'C K Q',      words: GRP_VCE_CKQ }),
+  vce_amn:   simpleActivity({ title: 'Ã M N',      words: GRP_VCE_AMN }),
+  vce_rs:    simpleActivity({ title: 'R e S',      words: GRP_VCE_RS }),
+  vce_x:     simpleActivity({ title: 'X',           words: GRP_VCE_X }),
+  vce_hc:    simpleActivity({ title: 'H e Ç',      words: GRP_VCE_HC }),
+};
+
+function selectVCEActivity(key) { selectActivity(VCE_ACTIVITIES[key]); }
+
+const VOWELS_SET = new Set(['a','e','i','o','u','ã','õ']);
+
+function findVowelIndices(displayWord) {
+  return [...displayWord.normalize('NFC')].reduce((acc, ch, i) => {
+    if (isLetterChar(ch) && VOWELS_SET.has(ch.toLowerCase())) acc.push(i);
+    return acc;
+  }, []);
+}
+
+function findConsonantIndices(displayWord) {
+  return [...displayWord.normalize('NFC')].reduce((acc, ch, i) => {
+    if (isLetterChar(ch) && !VOWELS_SET.has(ch.toLowerCase())) acc.push(i);
+    return acc;
+  }, []);
+}
+
+function renderScrambleChips() {
+  const chars = [...currentWord.displayWord.normalize('NFC')].filter(isLetterChar);
+  const shuffled = [...chars].sort(() => Math.random() - 0.5);
+  for (let attempts = 0; attempts < 5 && shuffled.join('').toLowerCase() === chars.join('').toLowerCase(); attempts++) {
+    shuffled.sort(() => Math.random() - 0.5);
+  }
+  const container = document.getElementById('scramble-chips');
+  container.innerHTML = '';
+  for (const ch of shuffled) {
+    const chip = document.createElement('div');
+    chip.className = 'scramble-chip';
+    chip.textContent = ch;
+    container.appendChild(chip);
+  }
+  container.style.display = 'flex';
+}
+
 let currentActivity = ACTIVITIES.vowels;
-let gameMode        = 'letras';   // 'letras' | 'palavras' | 'lacuna' | 'complete'
+let gameMode        = 'letras';   // 'letras' | 'palavras' | 'lacuna' | 'complete' | 'vogais' | 'consoantes' | 'embaralhado'
 
 // ─── Estado ───────────────────────────────────────────────────────────────────
 let deck          = [];
@@ -1235,10 +1430,13 @@ function playWordAudio(word, onEnd) {
 // formato existir, fala o texto por TTS. Bloqueio de autoplay NÃO cai no TTS — é
 // resolvido pelo gesto/timeout em playRoundIntro.
 const ENUNCIADOS = {
-  letras:   { srcs: ['audio/enunciado_letra.m4a',    'audio/enunciado_letra.mp3',    'audio/enunciado_letra.ogg'],    text: 'Selecione a letra inicial da palavra' },
-  palavras: { srcs: ['audio/enunciado_palavra.m4a',  'audio/enunciado_palavra.mp3',  'audio/enunciado_palavra.ogg'],  text: 'Escute e escreva a palavra' },
-  lacuna:   { srcs: ['audio/enunciado_lacuna.m4a',   'audio/enunciado_lacuna.mp3',   'audio/enunciado_lacuna.ogg'],   text: 'Complete as lacunas da palavra' },
-  complete: { srcs: ['audio/enunciado_complete.m4a', 'audio/enunciado_complete.mp3', 'audio/enunciado_complete.ogg'], text: 'Escute e escreva a palavra completa' },
+  letras:      { srcs: ['audio/enunciado_letra.m4a',       'audio/enunciado_letra.mp3',       'audio/enunciado_letra.ogg'],       text: 'Selecione a letra inicial da palavra' },
+  palavras:    { srcs: ['audio/enunciado_palavra.m4a',     'audio/enunciado_palavra.mp3',     'audio/enunciado_palavra.ogg'],     text: 'Escute e escreva a palavra' },
+  lacuna:      { srcs: ['audio/enunciado_lacuna.m4a',      'audio/enunciado_lacuna.mp3',      'audio/enunciado_lacuna.ogg'],      text: 'Complete as lacunas da palavra' },
+  complete:    { srcs: ['audio/enunciado_complete.m4a',    'audio/enunciado_complete.mp3',    'audio/enunciado_complete.ogg'],    text: 'Escute e escreva a palavra completa' },
+  vogais:      { srcs: ['audio/enunciado_vogais.m4a',      'audio/enunciado_vogais.mp3',      'audio/enunciado_vogais.ogg'],      text: 'Complete as vogais da palavra' },
+  consoantes:  { srcs: ['audio/enunciado_consoantes.m4a',  'audio/enunciado_consoantes.mp3',  'audio/enunciado_consoantes.ogg'],  text: 'Complete as consoantes da palavra' },
+  embaralhado: { srcs: ['audio/enunciado_embaralhado.m4a', 'audio/enunciado_embaralhado.mp3', 'audio/enunciado_embaralhado.ogg'], text: 'Descubra a palavra embaralhada' },
 };
 function playEnunciado(onEnd, onStart) {
   const { srcs, text } = ENUNCIADOS[gameMode] || ENUNCIADOS.letras;
@@ -1319,7 +1517,7 @@ function setButtonsEnabled(enabled) {
     btn.style.opacity = enabled ? '1' : '0.5';
     btn.style.cursor = enabled ? 'pointer' : 'not-allowed';
   });
-  if (gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'complete') {
+  if (gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'complete' || gameMode === 'vogais' || gameMode === 'consoantes' || gameMode === 'embaralhado') {
     const input = document.getElementById('spell-input');
     if (input) { input.disabled = !enabled; if (enabled && !answerLocked) input.focus(); }
     const skip = document.getElementById('spell-skip');
@@ -1390,7 +1588,7 @@ function loadRound(index) {
   const charSrc = getThemeChar();
   document.getElementById('character-img').src = charSrc;
   document.getElementById('character-group').parentElement.style.right =
-    (gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'complete') ? '120px' : '0';
+    (gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'complete' || gameMode === 'vogais' || gameMode === 'consoantes' || gameMode === 'embaralhado') ? '120px' : '0';
   wrongCount   = 0;
   answerLocked = false;
 
@@ -1420,7 +1618,9 @@ function loadRound(index) {
   const container = document.getElementById('options-container');
   container.innerHTML = '';
 
-  if (gameMode === 'lacuna' || gameMode === 'complete') {
+  document.getElementById('scramble-chips').style.display = 'none';
+
+  if (gameMode === 'lacuna' || gameMode === 'complete' || gameMode === 'vogais' || gameMode === 'consoantes') {
     wtext.style.display = 'none';
     boxes.style.display = 'flex';
     setupGapRound();
@@ -1428,6 +1628,16 @@ function loadRound(index) {
     skip.id = 'spell-skip';
     skip.textContent = 'mostrar palavra';
     skip.addEventListener('click', gapReveal);
+    container.appendChild(skip);
+  } else if (gameMode === 'embaralhado') {
+    wtext.style.display = 'none';
+    boxes.style.display = 'flex';
+    setupSpellRound();
+    renderScrambleChips();
+    const skip = document.createElement('button');
+    skip.id = 'spell-skip';
+    skip.textContent = 'mostrar palavra';
+    skip.addEventListener('click', spellReveal);
     container.appendChild(skip);
   } else if (gameMode === 'palavras') {
     // Soletração: esconde o nome, mostra as caixas e o botão "mostrar palavra".
@@ -1501,15 +1711,15 @@ function renderSpellBoxes() {
 
 function onSpellInput() {
   if (answerLocked || !currentWord || !spellTarget) return;
-  if (gameMode === 'lacuna' || gameMode === 'complete') {
+  if (gameMode === 'lacuna' || gameMode === 'complete' || gameMode === 'vogais' || gameMode === 'consoantes') {
     if (renderGapBoxes()) gapSuccess();
-  } else if (gameMode === 'palavras') {
+  } else if (gameMode === 'palavras' || gameMode === 'embaralhado') {
     if (renderSpellBoxes()) spellSuccess();
   }
 }
 
 function focusSpellInput() {
-  const isSpell = gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'complete';
+  const isSpell = gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'complete' || gameMode === 'vogais' || gameMode === 'consoantes' || gameMode === 'embaralhado';
   if (isSpell && !answerLocked) document.getElementById('spell-input').focus();
 }
 
@@ -1554,14 +1764,26 @@ function spellReveal() {
 function setupGapRound() {
   const w = currentWord;
   const chars = [...w.displayWord.normalize('NFC')];
-  const gapIndices = findGapCharIndices(w.displayWord, w.gapPattern);
   const input = document.getElementById('spell-input');
   input.value = '';
   input.disabled = true;
   if (gameMode === 'lacuna') {
+    const gapIndices = findGapCharIndices(w.displayWord, w.gapPattern);
     spellTarget = { chars, gapIndices, isGap: true, mode: 'lacuna' };
     input.maxLength = gapIndices.length + 2;
+  } else if (gameMode === 'vogais') {
+    const gapIndices = findVowelIndices(w.displayWord);
+    const letterTargets = chars.filter(isLetterChar);
+    spellTarget = { chars, gapIndices, letterTargets, isGap: true, mode: 'complete' };
+    input.maxLength = letterTargets.length + 2;
+  } else if (gameMode === 'consoantes') {
+    const gapIndices = findConsonantIndices(w.displayWord);
+    const letterTargets = chars.filter(isLetterChar);
+    spellTarget = { chars, gapIndices, letterTargets, isGap: true, mode: 'complete' };
+    input.maxLength = letterTargets.length + 2;
   } else {
+    // complete
+    const gapIndices = findGapCharIndices(w.displayWord, w.gapPattern);
     const letterTargets = chars.filter(isLetterChar);
     spellTarget = { chars, gapIndices, letterTargets, isGap: true, mode: 'complete' };
     input.maxLength = letterTargets.length + 2;
@@ -1711,6 +1933,29 @@ function renderMenuTiles() {
       btn.innerHTML = `<div class="tile-face"><div class="vowels">${spans}</div></div>`;
       grid.appendChild(btn);
     }
+  } else if (gameMode === 'vogais' || gameMode === 'consoantes' || gameMode === 'embaralhado') {
+    const entries = [
+      { key:'vce_pb',    parts:[['P','#e8423a'],['-','#001159'],['B','#0058bd']] },
+      { key:'vce_td',    parts:[['T','#2bb24c'],['-','#001159'],['D','#f59e0b']] },
+      { key:'vce_fv',    parts:[['F','#0058bd'],['-','#001159'],['V','#2bb24c']] },
+      { key:'vce_mn',    parts:[['M','#e8423a'],['-','#001159'],['N','#8b3fc0']] },
+      { key:'vce_lr',    parts:[['L','#f59e0b'],['-','#001159'],['R','#e8423a']] },
+      { key:'vce_aeiou', parts:[['A','#e8423a'],['E','#f59e0b'],['I','#2bb24c'],['O','#0058bd'],['U','#8b3fc0']] },
+      { key:'vce_jzkwy', parts:[['J','#8b3fc0'],['Z','#2bb24c'],['K','#e8423a'],['W','#f59e0b'],['Y','#0058bd']] },
+      { key:'vce_ckq',   parts:[['C','#0058bd'],['-','#001159'],['K','#e8423a'],['-','#001159'],['Q','#8b3fc0']] },
+      { key:'vce_amn',   parts:[['Ã','#e8423a'],['-','#001159'],['M','#f59e0b'],['-','#001159'],['N','#2bb24c']] },
+      { key:'vce_rs',    parts:[['R','#e8423a'],['-','#001159'],['S','#0058bd']] },
+      { key:'vce_x',     parts:[['X','#8b3fc0']] },
+      { key:'vce_hc',    parts:[['H','#e8423a'],['-','#001159'],['Ç','#f59e0b']] },
+    ];
+    for (const e of entries) {
+      const btn = document.createElement('button');
+      btn.className = 'tile tile-active';
+      btn.onclick = () => selectVCEActivity(e.key);
+      const spans = e.parts.map(([l,c]) => `<span style="color:${c}">${l}</span>`).join('');
+      btn.innerHTML = `<div class="tile-face"><div class="vowels">${spans}</div></div>`;
+      grid.appendChild(btn);
+    }
   } else {
     const tiles = [
       { parts:[['A','#e8423a'],['E','#f59e0b'],['I','#2bb24c'],['O','#0058bd'],['U','#8b3fc0']], fn:'selectVowels' },
@@ -1811,6 +2056,7 @@ function showMenu() {
   document.getElementById('game-screen').style.display = 'none';
   document.getElementById('end-screen').classList.add('hidden');
   document.getElementById('speech-overlay').style.display = 'none';
+  document.getElementById('scramble-chips').style.display = 'none';
   document.getElementById('menu-screen').style.display = '';
   renderMenuTiles();
   applyBackground();
@@ -1841,7 +2087,7 @@ function selectH()      { selectActivity(ACTIVITIES.h); }
 
 function setGameMode(m) {
   gameMode = m;
-  ['letras','palavras','lacuna','complete'].forEach(mode =>
+  ['letras','vogais','consoantes','embaralhado','palavras','lacuna','complete'].forEach(mode =>
     document.getElementById(`mode-${mode}`).classList.toggle('active', m === mode)
   );
   renderMenuTiles();
@@ -1867,7 +2113,7 @@ const TEMAS = {
   },
   lacuna: {
     bg:       'temas/joao_pe_feijao/background_joao_feijao.png',
-    chars:    ['temas/joao_pe_feijao/feijao_joao.png','temas/joao_pe_feijao/feijao_galinha.png','temas/joao_pe_feijao/feijao_gigante.png'],
+    chars:    ['temas/joao_pe_feijao/feijao_joao.png','temas/joao_pe_feijao/feijao_galinha.png','temas/joao_pe_feijao/feijao-gigante.png'],
     frase:    'Complete as lacunas!',
     audio:    'audio/saudacao_lacuna.mp3',
     countKey: 'lacunaGreetCount'
@@ -1878,16 +2124,40 @@ const TEMAS = {
     frase:    'Escreva a palavra completa!',
     audio:    'audio/saudacao_complete.mp3',
     countKey: 'completeGreetCount'
+  },
+  vogais: {
+    bg:       'temas/cigarra_formiga/background_cigarra_formiga.png',
+    chars:    ['temas/cigarra_formiga/cigarra.png','temas/cigarra_formiga/formiga1.png','temas/cigarra_formiga/formiga2.png'],
+    frase:    'Complete as vogais!',
+    audio:    'audio/saudacao_vogais.mp3',
+    countKey: 'vogaisGreetCount'
+  },
+  consoantes: {
+    bg:       'temas/tartaruga_lebre/background_tartaruga_lebre.png',
+    chars:    ['temas/tartaruga_lebre/tartaruga.png','temas/tartaruga_lebre/lebre.png'],
+    frase:    'Complete as consoantes!',
+    audio:    'audio/saudacao_consoantes.mp3',
+    countKey: 'consoantesGreetCount'
+  },
+  embaralhado: {
+    bg:       'temas/sitio_pica_pau/background_sitio.png',
+    chars:    ['temas/sitio_pica_pau/anastacia.png','temas/sitio_pica_pau/emilia.png','temas/sitio_pica_pau/visconde-removebg-preview.png'],
+    frase:    'Descubra a palavra!',
+    audio:    'audio/saudacao_embaralhado.mp3',
+    countKey: 'embaralhadoGreetCount'
   }
 };
 
 // ─── Fundo (liga/desliga imagem de tema) ──────────────────────────────────────
 let bgOn = true;   // default: mostra imagem de tema
 const BG_NEUTRAL = {
-  letras:   '#dee1ff',
-  palavras: '#d1f5d3',
-  lacuna:   '#fff4e0',
-  complete: '#fce4f0',
+  letras:      '#dee1ff',
+  palavras:    '#d1f5d3',
+  lacuna:      '#fff4e0',
+  complete:    '#fce4f0',
+  vogais:      '#ffe8f0',
+  consoantes:  '#e8f4ff',
+  embaralhado: '#f0ffe8',
 };
 
 function themeBgUrl() {
