@@ -162,21 +162,21 @@
     display: flex; gap: 2px; font-weight: 700; font-family: "Quicksand", sans-serif;
     font-size: clamp(22px, 7vw, 42px); line-height: 1;
   }
-  /* Toggle de modo (LETRAS / PALAVRAS) no lado esquerdo do menu */
+  /* Toggle de modo (LETRAS / PALAVRAS / LACUNA / COMPLETE) no lado esquerdo do menu */
   #mode-toggle {
     position: fixed; left: 16px; top: 50%; transform: translateY(-50%);
-    display: flex; flex-direction: column; gap: 12px; z-index: 60;
+    display: flex; flex-direction: column; gap: 8px; z-index: 60;
   }
   .mode-btn {
-    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 15px;
-    letter-spacing: 0.05em; padding: 16px 12px; min-width: 104px; border-radius: 16px;
+    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 13px;
+    letter-spacing: 0.05em; padding: 12px 10px; min-width: 96px; border-radius: 16px;
     border: 3px solid #0058bd; background: #fff; color: #0058bd; cursor: pointer;
     box-shadow: 0 5px 0 0 #0058bd; transition: transform .1s, background .15s, color .15s;
   }
   .mode-btn:hover  { transform: scale(1.03); }
   .mode-btn:active { box-shadow: 0 0 0 0 #0058bd; transform: translateY(5px); }
   .mode-btn.active { background: #0058bd; color: #fff; }
-  @media (max-width: 640px) { #mode-toggle { left: 6px; } .mode-btn { min-width: 78px; padding: 12px 6px; font-size: 12px; } }
+  @media (max-width: 640px) { #mode-toggle { left: 6px; } .mode-btn { min-width: 72px; padding: 10px 6px; font-size: 11px; } }
   /* Caixas de soletração (modo palavra) */
   #spell-boxes { display: none; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 6px; }
   .spell-box {
@@ -243,8 +243,10 @@
 <div id="menu-screen">
   <!-- Modo de jogo: escolher letra inicial (LETRAS) ou soletrar (PALAVRAS) -->
   <div id="mode-toggle">
-    <button id="mode-letras" class="mode-btn active" onclick="setGameMode('letras')">LETRAS</button>
-    <button id="mode-palavras" class="mode-btn" onclick="setGameMode('palavras')">PALAVRAS</button>
+    <button id="mode-letras"   class="mode-btn active" onclick="setGameMode('letras')">LETRAS</button>
+    <button id="mode-palavras" class="mode-btn"        onclick="setGameMode('palavras')">PALAVRAS</button>
+    <button id="mode-lacuna"   class="mode-btn"        onclick="setGameMode('lacuna')">LACUNA</button>
+    <button id="mode-complete" class="mode-btn"        onclick="setGameMode('complete')">COMPLETE</button>
   </div>
   <header class="w-full px-4 pt-4 pb-2">
     <div class="glass rounded-full px-6 py-3 flex justify-between items-center max-w-5xl mx-auto shadow-sm">
@@ -265,115 +267,7 @@
   </header>
 
   <main class="flex items-center justify-center px-4 py-6 min-h-[calc(100vh-80px)]">
-    <div id="menu-grid">
-      <!-- Atividade ativa: vogais -->
-      <button class="tile tile-active" onclick="selectVowels()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#e8423a">A</span><span style="color:#f59e0b">E</span><span style="color:#2bb24c">I</span><span style="color:#0058bd">O</span><span style="color:#8b3fc0">U</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: F e V -->
-      <button class="tile tile-active" onclick="selectFV()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#0058bd">F</span><span style="color:#2bb24c">V</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: M e N -->
-      <button class="tile tile-active" onclick="selectMN()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#e8423a">M</span><span style="color:#8b3fc0">N</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: L e J -->
-      <button class="tile tile-active" onclick="selectLJ()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#f59e0b">L</span><span style="color:#8b3fc0">J</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: S e Z -->
-      <button class="tile tile-active" onclick="selectSZ()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#0058bd">S</span><span style="color:#2bb24c">Z</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: R forte -->
-      <button class="tile tile-active" onclick="selectR()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#e8423a">R</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: P B T D -->
-      <button class="tile tile-active" onclick="selectPBTD()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#e8423a">P</span><span style="color:#0058bd">B</span><span style="color:#2bb24c">T</span><span style="color:#f59e0b">D</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: C e G (ca co cu / ga go gu) -->
-      <button class="tile tile-active" onclick="selectCG()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#0058bd">C</span><span style="color:#2bb24c">G</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: Q -->
-      <button class="tile tile-active" onclick="selectQ()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#8b3fc0">Q</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: X e CH -->
-      <button class="tile tile-active" onclick="selectXCH()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#e8423a">X</span><span style="color:#0058bd">CH</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: K W Y -->
-      <button class="tile tile-active" onclick="selectKWY()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#2bb24c">K</span><span style="color:#f59e0b">W</span><span style="color:#8b3fc0">Y</span>
-          </div>
-        </div>
-      </button>
-
-      <!-- Atividade ativa: H -->
-      <button class="tile tile-active" onclick="selectH()">
-        <div class="tile-face">
-          <div class="vowels">
-            <span style="color:#e8423a">H</span>
-          </div>
-        </div>
-      </button>
-    </div>
+    <div id="menu-grid"></div>
   </main>
 
   <!-- ── Personagem do tema ──────────────────────────────────────────────────── -->
@@ -891,6 +785,134 @@ const GRP_H = {
   ]
 };
 
+// ─── Palavras dos modos LACUNA / COMPLETE ────────────────────────────────────
+function lacunaWord(baseName, displayWord, gapPattern) {
+  return { baseName, displayWord, gapPattern, imageCandidates: [`img/${baseName}.png`] };
+}
+
+const GRP_GAP_R = [
+  lacunaWord('ariranha','ariranha','r'),  lacunaWord('arara','arara','r'),
+  lacunaWord('cenoura','cenoura','r'),    lacunaWord('coruja','coruja','r'),
+  lacunaWord('girafa','girafa','r'),      lacunaWord('laranja','laranja','r'),
+  lacunaWord('mariposa','mariposa','r'),  lacunaWord('morango','morango','r'),
+  lacunaWord('morcego','morcego','r'),    lacunaWord('orelha','orelha','r'),
+  lacunaWord('pereira','pereira','r'),    lacunaWord('sereia','sereia','r'),
+  lacunaWord('tesoura','tesoura','r'),    lacunaWord('caramelo','caramelo','r'),
+  lacunaWord('pirulito','pirulito','r'),
+  lacunaWord('rato','rato','r'),          lacunaWord('remo','remo','r'),
+  lacunaWord('roda','roda','r'),          lacunaWord('rosa','rosa','r'),
+  lacunaWord('rua','rua','r'),
+];
+
+const GRP_GAP_SZ = [
+  lacunaWord('mesa','mesa','s'),          lacunaWord('casa','casa','s'),
+  lacunaWord('asa','asa','s'),            lacunaWord('vaso','vaso','s'),
+  lacunaWord('fase','fase','s'),          lacunaWord('base','base','s'),
+  lacunaWord('museu','museu','s'),        lacunaWord('camisa','camisa','s'),
+  lacunaWord('riso','riso','s'),          lacunaWord('pesado','pesado','s'),
+  lacunaWord('rosa','rosa','s'),          lacunaWord('aviso','aviso','s'),
+  lacunaWord('coisa','coisa','s'),        lacunaWord('tesoura','tesoura','s'),
+  lacunaWord('usado','usado','s'),
+  lacunaWord('zebra','zebra','z'),        lacunaWord('azul','azul','z'),
+  lacunaWord('feliz','feliz','z'),        lacunaWord('nariz','nariz','z'),
+  lacunaWord('fazenda','fazenda','z'),
+];
+
+const GRP_GAP_CG = [
+  lacunaWord('cinzento','cinzento','c'),  lacunaWord('cimento','cimento','c'),
+  lacunaWord('cigarro','cigarro','c'),    lacunaWord('cidade','cidade','c'),
+  lacunaWord('cinema','cinema','c'),      lacunaWord('cenoura','cenoura','c'),
+  lacunaWord('cereja','cereja','c'),      lacunaWord('cereal','cereal','c'),
+  lacunaWord('cesta','cesta','c'),        lacunaWord('cebola','cebola','c'),
+  lacunaWord('gelo','gelo','g'),          lacunaWord('geleia','geleia','g'),
+  lacunaWord('geladeira','geladeira','g'),lacunaWord('gesto','gesto','g'),
+  lacunaWord('girafa','girafa','g'),      lacunaWord('girassol','girassol','g'),
+  lacunaWord('gengiva','gengiva','g'),    lacunaWord('gengibre','gengibre','g'),
+  lacunaWord('gibi','gibi','g'),          lacunaWord('tigela','tigela','g'),
+];
+
+const GRP_GAP_CS = [
+  lacunaWord('acucar','açúcar','ç'),      lacunaWord('acao','ação','ç'),
+  lacunaWord('coracao','coração','ç'),    lacunaWord('laco','laço','ç'),
+  lacunaWord('traco','traço','ç'),        lacunaWord('furacao','furacão','ç'),
+  lacunaWord('cancao','canção','ç'),      lacunaWord('estacao','estação','ç'),
+  lacunaWord('maca','maçã','ç'),          lacunaWord('cacador','caçador','ç'),
+  lacunaWord('almoco','almoço','ç'),      lacunaWord('poco','poço','ç'),
+  lacunaWord('licao','lição','ç'),        lacunaWord('acai','açaí','ç'),
+  lacunaWord('facanha','façanha','ç'),
+  lacunaWord('piscina','piscina','sc'),   lacunaWord('nascer','nascer','sc'),
+  lacunaWord('crescer','crescer','sc'),   lacunaWord('descer','descer','sc'),
+  lacunaWord('disciplina','disciplina','sc'),
+];
+
+const GRP_GAP_NH = [
+  lacunaWord('aranha','aranha','nh'),     lacunaWord('banho','banho','nh'),
+  lacunaWord('carinho','carinho','nh'),   lacunaWord('castanha','castanha','nh'),
+  lacunaWord('cozinha','cozinha','nh'),   lacunaWord('espinho','espinho','nh'),
+  lacunaWord('farinha','farinha','nh'),   lacunaWord('linha','linha','nh'),
+  lacunaWord('manha','manhã','nh'),       lacunaWord('ninho','ninho','nh'),
+  lacunaWord('minhoca','minhoca','nh'),   lacunaWord('rainha','rainha','nh'),
+  lacunaWord('sonho','sonho','nh'),       lacunaWord('tamanho','tamanho','nh'),
+  lacunaWord('vinho','vinho','nh'),       lacunaWord('capinha','capinha','nh'),
+  lacunaWord('caminhao','caminhão','nh'), lacunaWord('galinha','galinha','nh'),
+  lacunaWord('marinho','marinho','nh'),   lacunaWord('vizinho','vizinho','nh'),
+];
+
+const GRP_GAP_LH = [
+  lacunaWord('abelha','abelha','lh'),     lacunaWord('agulha','agulha','lh'),
+  lacunaWord('batalha','batalha','lh'),   lacunaWord('brilho','brilho','lh'),
+  lacunaWord('coelho','coelho','lh'),     lacunaWord('espelho','espelho','lh'),
+  lacunaWord('filho','filho','lh'),       lacunaWord('folha','folha','lh'),
+  lacunaWord('ilha','ilha','lh'),         lacunaWord('joelho','joelho','lh'),
+  lacunaWord('milho','milho','lh'),       lacunaWord('molho','molho','lh'),
+  lacunaWord('olho','olho','lh'),         lacunaWord('palha','palha','lh'),
+  lacunaWord('palhaco','palhaço','lh'),   lacunaWord('pilha','pilha','lh'),
+  lacunaWord('telha','telha','lh'),       lacunaWord('toalha','toalha','lh'),
+  lacunaWord('trabalho','trabalho','lh'), lacunaWord('vermelho','vermelho','lh'),
+];
+
+const GRP_GAP_CH = [
+  lacunaWord('cachorro','cachorro','ch'), lacunaWord('chave','chave','ch'),
+  lacunaWord('chao','chão','ch'),         lacunaWord('cheiro','cheiro','ch'),
+  lacunaWord('chinelo','chinelo','ch'),   lacunaWord('chuva','chuva','ch'),
+  lacunaWord('churrasco','churrasco','ch'),lacunaWord('chocolate','chocolate','ch'),
+  lacunaWord('bicho','bicho','ch'),       lacunaWord('ficha','ficha','ch'),
+  lacunaWord('macho','macho','ch'),       lacunaWord('racha','racha','ch'),
+  lacunaWord('tocha','tocha','ch'),       lacunaWord('mochila','mochila','ch'),
+  lacunaWord('flecha','flecha','ch'),     lacunaWord('charada','charada','ch'),
+  lacunaWord('chapeu','chapéu','ch'),     lacunaWord('charme','charme','ch'),
+  lacunaWord('machado','machado','ch'),   lacunaWord('recheio','recheio','ch'),
+];
+
+const GRP_GAP_RRSS = [
+  lacunaWord('arrepio','arrepio','rr'),   lacunaWord('arrumar','arrumar','rr'),
+  lacunaWord('arroz','arroz','rr'),       lacunaWord('barriga','barriga','rr'),
+  lacunaWord('borracha','borracha','rr'), lacunaWord('burro','burro','rr'),
+  lacunaWord('cachorro','cachorro','rr'), lacunaWord('carro','carro','rr'),
+  lacunaWord('carroca','carroça','rr'),   lacunaWord('cigarro','cigarro','rr'),
+  lacunaWord('corrida','corrida','rr'),   lacunaWord('corredor','corredor','rr'),
+  lacunaWord('curral','curral','rr'),     lacunaWord('derreter','derreter','rr'),
+  lacunaWord('errado','errado','rr'),     lacunaWord('farra','farra','rr'),
+  lacunaWord('ferro','ferro','rr'),       lacunaWord('garrafa','garrafa','rr'),
+  lacunaWord('guerra','guerra','rr'),     lacunaWord('jarro','jarro','rr'),
+  lacunaWord('marreco','marreco','rr'),   lacunaWord('morro','morro','rr'),
+  lacunaWord('narrador','narrador','rr'), lacunaWord('serrote','serrote','rr'),
+  lacunaWord('terreno','terreno','rr'),   lacunaWord('berro','berro','rr'),
+  lacunaWord('carreta','carreta','rr'),   lacunaWord('marrom','marrom','rr'),
+  lacunaWord('correto','correto','rr'),   lacunaWord('terra','terra','rr'),
+  lacunaWord('forro','forró','rr'),       lacunaWord('borrao','borrão','rr'),
+  lacunaWord('jarrao','jarrão','rr'),     lacunaWord('serralheiro','serralheiro','rr'),
+  lacunaWord('morrer','morrer','rr'),     lacunaWord('torrao','torrão','rr'),
+  lacunaWord('osso','osso','ss'),         lacunaWord('passo','passo','ss'),
+  lacunaWord('russo','russo','ss'),       lacunaWord('massa','massa','ss'),
+  lacunaWord('passaro','pássaro','ss'),   lacunaWord('nosso','nosso','ss'),
+  lacunaWord('posso','posso','ss'),       lacunaWord('passado','passado','ss'),
+  lacunaWord('assado','assado','ss'),     lacunaWord('grosso','grosso','ss'),
+  lacunaWord('pessoa','pessoa','ss'),     lacunaWord('passeio','passeio','ss'),
+  lacunaWord('professora','professora','ss'),lacunaWord('cassino','cassino','ss'),
+  lacunaWord('possivel','possível','ss'),
+];
+
 // Como ainda não há um inventário fixo dessas imagens, geramos os nomes prováveis:
 // <base> e <base>2, em jpg/jpeg/png/webp. O loadRound tenta cada um e cai no
 // placeholder só quando todos falham.
@@ -1095,8 +1117,45 @@ const ACTIVITIES = {
     words: GRP_H
   })
 };
+// ─── Atividades de lacuna / complete ─────────────────────────────────────────
+function findGapCharIndices(displayWord, pattern) {
+  const chars = [...displayWord.normalize('NFC')];
+  const pat   = [...pattern.normalize('NFC').toLowerCase()];
+  const indices = [];
+  for (let i = 0; i <= chars.length - pat.length; i++) {
+    if (pat.every((pc, j) => chars[i + j].toLowerCase() === pc)) {
+      for (let j = 0; j < pat.length; j++) indices.push(i + j);
+      i += pat.length - 1;
+    }
+  }
+  return indices;
+}
+
+function gapActivity({ title, words }) {
+  return {
+    title,
+    buildDeck() {
+      const shuffled = [...words].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, Math.min(ROUND_SIZE, shuffled.length));
+    }
+  };
+}
+
+const GAP_ACTIVITIES = {
+  gap_r:    gapActivity({ title: 'R fraco e R forte',  words: GRP_GAP_R }),
+  gap_sz:   gapActivity({ title: 'S com som de Z e Z', words: GRP_GAP_SZ }),
+  gap_cg:   gapActivity({ title: 'CE/CI e GE/GI',      words: GRP_GAP_CG }),
+  gap_cs:   gapActivity({ title: 'Ç e SC',              words: GRP_GAP_CS }),
+  gap_nh:   gapActivity({ title: 'NH',                  words: GRP_GAP_NH }),
+  gap_lh:   gapActivity({ title: 'LH',                  words: GRP_GAP_LH }),
+  gap_ch:   gapActivity({ title: 'CH',                  words: GRP_GAP_CH }),
+  gap_rrss: gapActivity({ title: 'RR e SS',             words: GRP_GAP_RRSS }),
+};
+
+function selectGapActivity(key) { selectActivity(GAP_ACTIVITIES[key]); }
+
 let currentActivity = ACTIVITIES.vowels;
-let gameMode        = 'letras';   // 'letras' (escolher letra) | 'palavras' (soletrar)
+let gameMode        = 'letras';   // 'letras' | 'palavras' | 'lacuna' | 'complete'
 
 // ─── Estado ───────────────────────────────────────────────────────────────────
 let deck          = [];
@@ -1162,8 +1221,10 @@ function playWordAudio(word, onEnd) {
 // formato existir, fala o texto por TTS. Bloqueio de autoplay NÃO cai no TTS — é
 // resolvido pelo gesto/timeout em playRoundIntro.
 const ENUNCIADOS = {
-  letras:   { srcs: ['audio/enunciado_letra.m4a',   'audio/enunciado_letra.mp3',   'audio/enunciado_letra.ogg'],   text: 'Selecione a letra inicial da palavra' },
-  palavras: { srcs: ['audio/enunciado_palavra.m4a', 'audio/enunciado_palavra.mp3', 'audio/enunciado_palavra.ogg'], text: 'Escute e escreva a palavra' },
+  letras:   { srcs: ['audio/enunciado_letra.m4a',    'audio/enunciado_letra.mp3',    'audio/enunciado_letra.ogg'],    text: 'Selecione a letra inicial da palavra' },
+  palavras: { srcs: ['audio/enunciado_palavra.m4a',  'audio/enunciado_palavra.mp3',  'audio/enunciado_palavra.ogg'],  text: 'Escute e escreva a palavra' },
+  lacuna:   { srcs: ['audio/enunciado_lacuna.m4a',   'audio/enunciado_lacuna.mp3',   'audio/enunciado_lacuna.ogg'],   text: 'Complete as lacunas da palavra' },
+  complete: { srcs: ['audio/enunciado_complete.m4a', 'audio/enunciado_complete.mp3', 'audio/enunciado_complete.ogg'], text: 'Escute e escreva a palavra completa' },
 };
 function playEnunciado(onEnd, onStart) {
   const { srcs, text } = ENUNCIADOS[gameMode] || ENUNCIADOS.letras;
@@ -1244,7 +1305,7 @@ function setButtonsEnabled(enabled) {
     btn.style.opacity = enabled ? '1' : '0.5';
     btn.style.cursor = enabled ? 'pointer' : 'not-allowed';
   });
-  if (gameMode === 'palavras') {
+  if (gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'complete') {
     const input = document.getElementById('spell-input');
     if (input) { input.disabled = !enabled; if (enabled && !answerLocked) input.focus(); }
     const skip = document.getElementById('spell-skip');
@@ -1314,7 +1375,8 @@ function loadRound(index) {
   currentWord  = deck[index];
   const charSrc = getThemeChar();
   document.getElementById('character-img').src = charSrc;
-  document.getElementById('character-group').parentElement.style.right = gameMode === 'palavras' ? '120px' : '0';
+  document.getElementById('character-group').parentElement.style.right =
+    (gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'complete') ? '120px' : '0';
   wrongCount   = 0;
   answerLocked = false;
 
@@ -1344,7 +1406,16 @@ function loadRound(index) {
   const container = document.getElementById('options-container');
   container.innerHTML = '';
 
-  if (gameMode === 'palavras') {
+  if (gameMode === 'lacuna' || gameMode === 'complete') {
+    wtext.style.display = 'none';
+    boxes.style.display = 'flex';
+    setupGapRound();
+    const skip = document.createElement('button');
+    skip.id = 'spell-skip';
+    skip.textContent = 'mostrar palavra';
+    skip.addEventListener('click', gapReveal);
+    container.appendChild(skip);
+  } else if (gameMode === 'palavras') {
     // Soletração: esconde o nome, mostra as caixas e o botão "mostrar palavra".
     wtext.style.display = 'none';
     boxes.style.display = 'flex';
@@ -1415,12 +1486,17 @@ function renderSpellBoxes() {
 }
 
 function onSpellInput() {
-  if (gameMode !== 'palavras' || answerLocked || !currentWord || !spellTarget) return;
-  if (renderSpellBoxes()) spellSuccess();
+  if (answerLocked || !currentWord || !spellTarget) return;
+  if (gameMode === 'lacuna' || gameMode === 'complete') {
+    if (renderGapBoxes()) gapSuccess();
+  } else if (gameMode === 'palavras') {
+    if (renderSpellBoxes()) spellSuccess();
+  }
 }
 
 function focusSpellInput() {
-  if (gameMode === 'palavras' && !answerLocked) document.getElementById('spell-input').focus();
+  const isSpell = gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'complete';
+  if (isSpell && !answerLocked) document.getElementById('spell-input').focus();
 }
 
 function revealWordText() {
@@ -1458,6 +1534,192 @@ function spellReveal() {
   revealWordText();
   setTimeout(() => playWordAudio(currentWord), 300);
   setTimeout(advanceRound, 2200);
+}
+
+// ─── Modo lacuna / complete ────────────────────────────────────────────────────
+function setupGapRound() {
+  const w = currentWord;
+  const chars = [...w.displayWord.normalize('NFC')];
+  const gapIndices = findGapCharIndices(w.displayWord, w.gapPattern);
+  const input = document.getElementById('spell-input');
+  input.value = '';
+  input.disabled = true;
+  if (gameMode === 'lacuna') {
+    spellTarget = { chars, gapIndices, isGap: true, mode: 'lacuna' };
+    input.maxLength = gapIndices.length + 2;
+  } else {
+    const letterTargets = chars.filter(isLetterChar);
+    spellTarget = { chars, gapIndices, letterTargets, isGap: true, mode: 'complete' };
+    input.maxLength = letterTargets.length + 2;
+  }
+  renderGapBoxes();
+}
+
+function renderGapBoxes() {
+  if (!spellTarget || !spellTarget.isGap) return false;
+  const input = document.getElementById('spell-input');
+  const typed = [...input.value.normalize('NFC')].filter(isLetterChar);
+  const boxes = document.getElementById('spell-boxes');
+  boxes.innerHTML = '';
+  const { chars, gapIndices } = spellTarget;
+
+  if (spellTarget.mode === 'lacuna') {
+    let gapSlot = 0, allOk = true;
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
+      const box = document.createElement('div');
+      box.className = 'spell-box';
+      if (!isLetterChar(ch)) {
+        box.classList.add('given'); box.textContent = ch === ' ' ? ' ' : ch;
+      } else if (gapIndices.includes(i)) {
+        const t = typed[gapSlot++], target = ch;
+        if (t == null) { allOk = false; }
+        else if (t.toLowerCase() === target.toLowerCase()) { box.classList.add('ok'); box.textContent = t; }
+        else { box.classList.add('bad'); box.textContent = t; allOk = false; }
+      } else {
+        box.classList.add('given'); box.textContent = ch;
+      }
+      boxes.appendChild(box);
+    }
+    return typed.length === gapIndices.length && allOk;
+  } else {
+    let slot = 0, allOk = true;
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
+      const box = document.createElement('div');
+      box.className = 'spell-box';
+      if (!isLetterChar(ch)) {
+        box.classList.add('given'); box.textContent = ch === ' ' ? ' ' : ch;
+      } else {
+        const t = typed[slot++], target = ch;
+        const isGap = gapIndices.includes(i);
+        if (t == null) {
+          if (!isGap) { box.classList.add('given'); box.textContent = ch; }
+          allOk = false;
+        } else if (t.toLowerCase() === target.toLowerCase()) {
+          box.classList.add('ok'); box.textContent = t;
+        } else {
+          box.classList.add('bad'); box.textContent = t; allOk = false;
+        }
+      }
+      boxes.appendChild(box);
+    }
+    return typed.length === spellTarget.letterTargets.length && allOk;
+  }
+}
+
+function gapSuccess() {
+  if (answerLocked) return;
+  answerLocked = true;
+  score++;
+  document.getElementById('spell-input').disabled = true;
+  playSuccessSound();
+  spawnConfetti();
+  const card = document.getElementById('activity-card');
+  card.style.borderColor = '#298600';
+  card.style.boxShadow   = '0 10px 0 0 #298600';
+  setTimeout(() => card.classList.add('animate-bounce-once'), 50);
+  setTimeout(() => playWordAudio(currentWord), 200);
+  setTimeout(advanceRound, 2200);
+}
+
+function gapReveal() {
+  if (answerLocked) return;
+  answerLocked = true;
+  document.getElementById('spell-input').disabled = true;
+  const input = document.getElementById('spell-input');
+  const typed = [...input.value.normalize('NFC')].filter(isLetterChar);
+  const boxes = document.getElementById('spell-boxes');
+  boxes.innerHTML = '';
+  const { chars, gapIndices } = spellTarget;
+
+  if (spellTarget.mode === 'lacuna') {
+    let gapSlot = 0;
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
+      const box = document.createElement('div');
+      box.className = 'spell-box';
+      if (!isLetterChar(ch)) {
+        box.classList.add('given'); box.textContent = ch === ' ' ? ' ' : ch;
+      } else if (gapIndices.includes(i)) {
+        const t = typed[gapSlot++];
+        if (t && t.toLowerCase() === ch.toLowerCase()) { box.classList.add('ok'); box.textContent = t; }
+        else { box.classList.add('reveal'); box.textContent = ch; }
+      } else {
+        box.classList.add('given'); box.textContent = ch;
+      }
+      boxes.appendChild(box);
+    }
+  } else {
+    let slot = 0;
+    for (let i = 0; i < chars.length; i++) {
+      const ch = chars[i];
+      const box = document.createElement('div');
+      box.className = 'spell-box';
+      if (!isLetterChar(ch)) {
+        box.classList.add('given'); box.textContent = ch === ' ' ? ' ' : ch;
+      } else {
+        const t = typed[slot++];
+        if (t && t.toLowerCase() === ch.toLowerCase()) { box.classList.add('ok'); box.textContent = t; }
+        else { box.classList.add('reveal'); box.textContent = ch; }
+      }
+      boxes.appendChild(box);
+    }
+  }
+  revealWordText();
+  setTimeout(() => playWordAudio(currentWord), 300);
+  setTimeout(advanceRound, 2200);
+}
+
+// ─── Tiles do menu ────────────────────────────────────────────────────────────
+function renderMenuTiles() {
+  const grid = document.getElementById('menu-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+
+  if (gameMode === 'lacuna' || gameMode === 'complete') {
+    const entries = [
+      { key:'gap_r',    parts:[['R','#e8423a']] },
+      { key:'gap_sz',   parts:[['S','#0058bd'],['e','#001159'],['Z','#2bb24c']] },
+      { key:'gap_cg',   parts:[['C','#0058bd'],['e','#001159'],['G','#2bb24c']] },
+      { key:'gap_cs',   parts:[['Ç','#f59e0b'],['e','#001159'],['SC','#8b3fc0']] },
+      { key:'gap_nh',   parts:[['NH','#e8423a']] },
+      { key:'gap_lh',   parts:[['LH','#2bb24c']] },
+      { key:'gap_ch',   parts:[['CH','#0058bd']] },
+      { key:'gap_rrss', parts:[['RR','#e8423a'],['e','#001159'],['SS','#f59e0b']] },
+    ];
+    for (const e of entries) {
+      const btn = document.createElement('button');
+      btn.className = 'tile tile-active';
+      btn.onclick = () => selectGapActivity(e.key);
+      const spans = e.parts.map(([l,c]) => `<span style="color:${c}">${l}</span>`).join('');
+      btn.innerHTML = `<div class="tile-face"><div class="vowels">${spans}</div></div>`;
+      grid.appendChild(btn);
+    }
+  } else {
+    const tiles = [
+      { parts:[['A','#e8423a'],['E','#f59e0b'],['I','#2bb24c'],['O','#0058bd'],['U','#8b3fc0']], fn:'selectVowels' },
+      { parts:[['F','#0058bd'],['V','#2bb24c']],                                                  fn:'selectFV' },
+      { parts:[['M','#e8423a'],['N','#8b3fc0']],                                                  fn:'selectMN' },
+      { parts:[['L','#f59e0b'],['J','#8b3fc0']],                                                  fn:'selectLJ' },
+      { parts:[['S','#0058bd'],['Z','#2bb24c']],                                                  fn:'selectSZ' },
+      { parts:[['R','#e8423a']],                                                                   fn:'selectR' },
+      { parts:[['P','#e8423a'],['B','#0058bd'],['T','#2bb24c'],['D','#f59e0b']],                  fn:'selectPBTD' },
+      { parts:[['C','#0058bd'],['G','#2bb24c']],                                                   fn:'selectCG' },
+      { parts:[['Q','#8b3fc0']],                                                                   fn:'selectQ' },
+      { parts:[['X','#e8423a'],['CH','#0058bd']],                                                  fn:'selectXCH' },
+      { parts:[['K','#2bb24c'],['W','#f59e0b'],['Y','#8b3fc0']],                                  fn:'selectKWY' },
+      { parts:[['H','#e8423a']],                                                                   fn:'selectH' },
+    ];
+    for (const t of tiles) {
+      const btn = document.createElement('button');
+      btn.className = 'tile tile-active';
+      btn.onclick = () => window[t.fn]();
+      const spans = t.parts.map(([l,c]) => `<span style="color:${c}">${l}</span>`).join('');
+      btn.innerHTML = `<div class="tile-face"><div class="vowels">${spans}</div></div>`;
+      grid.appendChild(btn);
+    }
+  }
 }
 
 function handleGuess(letter, correct, btnEl) {
@@ -1535,6 +1797,7 @@ function showMenu() {
   document.getElementById('end-screen').classList.add('hidden');
   document.getElementById('speech-overlay').style.display = 'none';
   document.getElementById('menu-screen').style.display = '';
+  renderMenuTiles();
   applyBackground();
   updateMenuCharacter();
 }
@@ -1563,8 +1826,10 @@ function selectH()      { selectActivity(ACTIVITIES.h); }
 
 function setGameMode(m) {
   gameMode = m;
-  document.getElementById('mode-letras').classList.toggle('active', m === 'letras');
-  document.getElementById('mode-palavras').classList.toggle('active', m === 'palavras');
+  ['letras','palavras','lacuna','complete'].forEach(mode =>
+    document.getElementById(`mode-${mode}`).classList.toggle('active', m === mode)
+  );
+  renderMenuTiles();
   applyBackground();
   updateMenuCharacter();
 }
@@ -1584,20 +1849,38 @@ const TEMAS = {
     frase:    'Me ajude com as palavras.',
     audio:    'audio/saudacao_palavras.mp3',
     countKey: 'palavrasGreetCount'
+  },
+  lacuna: {
+    bg:       'temas/joao_pe_feijao/background_joao_feijao.png',
+    chars:    ['temas/joao_pe_feijao/feijao_joao.png','temas/joao_pe_feijao/feijao_galinha.png','temas/joao_pe_feijao/feijao_gigante.png'],
+    frase:    'Complete as lacunas!',
+    audio:    'audio/saudacao_lacuna.mp3',
+    countKey: 'lacunaGreetCount'
+  },
+  complete: {
+    bg:       'temas/joao_maria/background_joao_maria.png',
+    chars:    ['temas/joao_maria/joao_joao_maria.png','temas/joao_maria/maria_joao_maria.png','temas/joao_maria/bruxa_joao_maria.png'],
+    frase:    'Escreva a palavra completa!',
+    audio:    'audio/saudacao_complete.mp3',
+    countKey: 'completeGreetCount'
   }
 };
 
 // ─── Fundo (liga/desliga imagem de tema) ──────────────────────────────────────
 let bgOn = true;   // default: mostra imagem de tema
-const BG_NEUTRAL_LETRAS   = "#dee1ff";   // lavanda — modo LETRAS
-const BG_NEUTRAL_PALAVRAS = "#d1f5d3";   // verde-menta — modo PALAVRAS
+const BG_NEUTRAL = {
+  letras:   '#dee1ff',
+  palavras: '#d1f5d3',
+  lacuna:   '#fff4e0',
+  complete: '#fce4f0',
+};
 
 function themeBgUrl() {
   return `url('${(TEMAS[gameMode] || TEMAS.letras).bg}')`;
 }
 
 function applyBackground() {
-  const neutral = gameMode === 'palavras' ? BG_NEUTRAL_PALAVRAS : BG_NEUTRAL_LETRAS;
+  const neutral = BG_NEUTRAL[gameMode] || BG_NEUTRAL.letras;
   document.body.style.backgroundImage = bgOn ? themeBgUrl() : 'none';
   document.body.style.backgroundColor = bgOn ? '' : neutral;
   document.querySelectorAll('.bg-toggle-btn').forEach(btn => {
