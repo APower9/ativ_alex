@@ -179,6 +179,29 @@
   @media (max-width: 640px) { #mode-toggle { left: 4px; } .mode-btn { min-width: 64px; padding: 6px 4px; font-size: 9px; } }
   /* Chips de letras embaralhadas */
   #scramble-chips { display: none; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 6px; }
+
+  /* ── Grade de debug (temporária) ────────────────────────────────────────── */
+  #debug-grid {
+    position: fixed; inset: 0; z-index: 900;
+    display: none; grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(8, 1fr);
+    pointer-events: none;
+  }
+  #debug-grid.visible { display: grid; }
+  .debug-cell {
+    border: 1px solid rgba(255,255,255,0.45);
+    display: flex; align-items: flex-start; justify-content: flex-start;
+    padding: 3px 5px;
+    font-family: monospace; font-size: 11px; font-weight: 700;
+    color: #fff; text-shadow: 0 0 3px #000, 0 0 6px #000;
+    background: rgba(0,0,0,0.04);
+  }
+  #debug-grid-btn {
+    position: fixed; bottom: 16px; right: 16px; z-index: 950;
+    font-family: "Quicksand", sans-serif; font-weight: 700; font-size: 11px;
+    padding: 6px 10px; border-radius: 10px; border: 2px solid #555;
+    background: rgba(0,0,0,0.55); color: #fff; cursor: pointer;
+    pointer-events: all;
+  }
   .scramble-chip {
     width: 34px; height: 46px; border-radius: 8px; border: 3px solid #f59e0b; background: #fff9e6;
     display: flex; align-items: center; justify-content: center;
@@ -186,7 +209,7 @@
     font-family: "Quicksand", sans-serif; text-transform: lowercase;
   }
   /* Caixas de soletração (modo palavra) */
-  #spell-boxes { display: none; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 6px; }
+  #spell-boxes { display: none; flex-wrap: nowrap; gap: 6px; justify-content: center; margin-top: 6px; }
   .spell-box {
     width: 34px; height: 46px; border-radius: 8px; border: 3px solid #dee1ff; background: #f3f4ff;
     display: flex; align-items: center; justify-content: center;
@@ -1155,7 +1178,7 @@ const ACTIVITIES = {
   // extra deixa o cabelo "saltar" para fora do topo do disco (como o menino das
   // vogais). Os números do disco/faixa variam conforme a cabeça de cada um.
   fv: letterActivity({
-    title: 'Aventuras do F e V',
+    title: 'Aventuras do V e F',
     character: 'img/personagem_alfabeto1.png',
     charStyle: {
       width:'470px', left:'-139px', top:'10px',
@@ -1184,25 +1207,15 @@ const ACTIVITIES = {
     },
     words: { ...GRP_L, ...GRP_J }
   }),
-  sz: letterActivity({
-    title: 'Aventuras do S e Z',
+  szr: letterActivity({
+    title: 'Aventuras do S, Z e R',
     character: 'img/personagem_alfabeto4.png',
     charStyle: {
       width:'470px', left:'-143px', top:'10px',
       mask:'radial-gradient(circle 88px at 233px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
       maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
     },
-    words: GRP_SZ
-  }),
-  r: letterActivity({
-    title: 'Aventuras do R forte',
-    character: 'img/personagem_alfabeto5.png',
-    charStyle: {
-      width:'470px', left:'-143px', top:'10px',
-      mask:'radial-gradient(circle 88px at 233px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
-      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
-    },
-    words: GRP_R
+    words: { ...GRP_SZ, ...GRP_R }
   }),
   pbtd: letterActivity({
     title: 'Aventuras do P, B, T e D',
@@ -1215,7 +1228,7 @@ const ACTIVITIES = {
     words: GRP_PBTD
   }),
   cg: letterActivity({
-    title: 'Aventuras do C e G (ca, co, cu / ga, go, gu)',
+    title: 'Aventuras do C e G',
     character: 'img/personagem_alfabeto8.png',
     charStyle: {
       width:'470px', left:'-143px', top:'9px',
@@ -1224,45 +1237,25 @@ const ACTIVITIES = {
     },
     words: GRP_CG
   }),
-  q: letterActivity({
-    title: 'Aventuras do Q',
+  qx: letterActivity({
+    title: 'Aventuras do Q, X e CH',
     character: 'img/personagem_alfabeto9.png',
     charStyle: {
       width:'470px', left:'-141px', top:'10px',
       mask:'radial-gradient(circle 88px at 231px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
       maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
     },
-    blocks: [GRP_Q_QUAQUO, GRP_Q_QUEQUI]
+    words: { Q: [...GRP_Q_QUAQUO.Q, ...GRP_Q_QUEQUI.Q], ...GRP_XCH }
   }),
-  xch: letterActivity({
-    title: 'Aventuras do X e CH',
-    character: 'img/personagem_alfabeto10.png',
-    charStyle: {
-      width:'470px', left:'-141px', top:'10px',
-      mask:'radial-gradient(circle 88px at 231px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
-      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
-    },
-    words: GRP_XCH
-  }),
-  kwy: letterActivity({
-    title: 'Aventuras do K, W e Y',
+  kwyh: letterActivity({
+    title: 'Aventuras do K, W, Y e H',
     character: 'img/personagem_alfabeto11.png',
     charStyle: {
       width:'470px', left:'-143px', top:'9px',
       mask:'radial-gradient(circle 88px at 233px 126px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
       maskSize:'auto, 108px 70px', maskPosition:'0 0, 176px 0', maskRepeat:'no-repeat,no-repeat'
     },
-    words: GRP_KWY
-  }),
-  h: letterActivity({
-    title: 'Aventuras do H',
-    character: 'img/personagem_alfabeto12.png',
-    charStyle: {
-      width:'470px', left:'-141px', top:'10px',
-      mask:'radial-gradient(circle 88px at 231px 125px, #000 100%, rgba(0,0,0,0) 100%), linear-gradient(#000, #000)',
-      maskSize:'auto, 112px 72px', maskPosition:'0 0, 174px 0', maskRepeat:'no-repeat,no-repeat'
-    },
-    words: GRP_H
+    words: { ...GRP_KWY, ...GRP_H }
   })
 };
 // ─── Atividades de lacuna / complete ─────────────────────────────────────────
@@ -1587,8 +1580,19 @@ function loadRound(index) {
   currentWord  = deck[index];
   const charSrc = getThemeChar();
   document.getElementById('character-img').src = charSrc;
-  document.getElementById('character-group').parentElement.style.right =
-    (gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'complete' || gameMode === 'vogais' || gameMode === 'consoantes' || gameMode === 'embaralhado') ? '120px' : '0';
+  const charOuter = document.getElementById('character-group').parentElement;
+  const temaAtual = TEMAS[gameMode] || TEMAS.letras;
+  if (temaAtual.charPos) {
+    charOuter.style.left      = temaAtual.charPos.left;
+    charOuter.style.bottom    = temaAtual.charPos.bottom;
+    charOuter.style.right     = '';
+    charOuter.style.transform = 'translateX(-50%)';
+  } else {
+    charOuter.style.left      = '';
+    charOuter.style.transform = '';
+    charOuter.style.bottom    = '0';
+    charOuter.style.right     = (gameMode === 'palavras' || gameMode === 'lacuna' || gameMode === 'embaralhado') ? '120px' : '0';
+  }
   wrongCount   = 0;
   answerLocked = false;
 
@@ -1650,10 +1654,9 @@ function loadRound(index) {
     skip.addEventListener('click', spellReveal);
     container.appendChild(skip);
   } else {
-    // Modo letra: mostra o nome e os 3 botões de letra.
+    // Modo letra: apenas imagem + áudio + 3 botões de letra (sem texto da palavra).
     boxes.style.display = 'none';
-    wtext.style.display = '';
-    wtext.textContent   = currentWord.displayWord;
+    wtext.style.display = 'none';
     currentActivity.buildOptions(currentWord.vowel).forEach(letter => {
       const btn = document.createElement('button');
       btn.className = 'btn-letter';
@@ -1682,6 +1685,22 @@ function setupSpellRound() {
   renderSpellBoxes();
 }
 
+function adjustSpellBoxSize() {
+  const boxes = document.getElementById('spell-boxes');
+  const count = boxes.querySelectorAll('.spell-box').length;
+  let w, h, fs;
+  if      (count <= 7)  { w = 34; h = 46; fs = 28; }
+  else if (count <= 9)  { w = 27; h = 37; fs = 22; }
+  else if (count <= 11) { w = 22; h = 30; fs = 18; }
+  else                  { w = 18; h = 26; fs = 15; }
+  boxes.style.gap = (count <= 9 ? 6 : 4) + 'px';
+  boxes.querySelectorAll('.spell-box').forEach(b => {
+    b.style.width    = w  + 'px';
+    b.style.height   = h  + 'px';
+    b.style.fontSize = fs + 'px';
+  });
+}
+
 // Redesenha as caixas a partir do que foi digitado. Retorna true se a palavra
 // inteira está correta.
 function renderSpellBoxes() {
@@ -1706,6 +1725,7 @@ function renderSpellBoxes() {
     }
     boxes.appendChild(box);
   }
+  adjustSpellBoxSize();
   return typed.length === spellTarget.letterTargets.length && allOk;
 }
 
@@ -1817,6 +1837,7 @@ function renderGapBoxes() {
       }
       boxes.appendChild(box);
     }
+    adjustSpellBoxSize();
     return typed.length === gapIndices.length && allOk;
   } else {
     let slot = 0, allOk = true;
@@ -1840,6 +1861,7 @@ function renderGapBoxes() {
       }
       boxes.appendChild(box);
     }
+    adjustSpellBoxSize();
     return typed.length === spellTarget.letterTargets.length && allOk;
   }
 }
@@ -1935,18 +1957,18 @@ function renderMenuTiles() {
     }
   } else if (gameMode === 'vogais' || gameMode === 'consoantes' || gameMode === 'embaralhado') {
     const entries = [
-      { key:'vce_pb',    parts:[['P','#e8423a'],['-','#001159'],['B','#0058bd']] },
-      { key:'vce_td',    parts:[['T','#2bb24c'],['-','#001159'],['D','#f59e0b']] },
-      { key:'vce_fv',    parts:[['F','#0058bd'],['-','#001159'],['V','#2bb24c']] },
-      { key:'vce_mn',    parts:[['M','#e8423a'],['-','#001159'],['N','#8b3fc0']] },
-      { key:'vce_lr',    parts:[['L','#f59e0b'],['-','#001159'],['R','#e8423a']] },
+      { key:'vce_pb',    parts:[['P','#e8423a'],['B','#0058bd']] },
+      { key:'vce_td',    parts:[['T','#2bb24c'],['D','#f59e0b']] },
+      { key:'vce_fv',    parts:[['F','#0058bd'],['V','#2bb24c']] },
+      { key:'vce_mn',    parts:[['M','#e8423a'],['N','#8b3fc0']] },
+      { key:'vce_lr',    parts:[['L','#f59e0b'],['R','#e8423a']] },
       { key:'vce_aeiou', parts:[['A','#e8423a'],['E','#f59e0b'],['I','#2bb24c'],['O','#0058bd'],['U','#8b3fc0']] },
       { key:'vce_jzkwy', parts:[['J','#8b3fc0'],['Z','#2bb24c'],['K','#e8423a'],['W','#f59e0b'],['Y','#0058bd']] },
-      { key:'vce_ckq',   parts:[['C','#0058bd'],['-','#001159'],['K','#e8423a'],['-','#001159'],['Q','#8b3fc0']] },
-      { key:'vce_amn',   parts:[['Ã','#e8423a'],['-','#001159'],['M','#f59e0b'],['-','#001159'],['N','#2bb24c']] },
-      { key:'vce_rs',    parts:[['R','#e8423a'],['-','#001159'],['S','#0058bd']] },
+      { key:'vce_ckq',   parts:[['C','#0058bd'],['K','#e8423a'],['Q','#8b3fc0']] },
+      { key:'vce_amn',   parts:[['Ã','#e8423a'],['M','#f59e0b'],['N','#2bb24c']] },
+      { key:'vce_rs',    parts:[['R','#e8423a'],['S','#0058bd']] },
       { key:'vce_x',     parts:[['X','#8b3fc0']] },
-      { key:'vce_hc',    parts:[['H','#e8423a'],['-','#001159'],['Ç','#f59e0b']] },
+      { key:'vce_hc',    parts:[['H','#e8423a'],['Ç','#f59e0b']] },
     ];
     for (const e of entries) {
       const btn = document.createElement('button');
@@ -1959,17 +1981,14 @@ function renderMenuTiles() {
   } else {
     const tiles = [
       { parts:[['A','#e8423a'],['E','#f59e0b'],['I','#2bb24c'],['O','#0058bd'],['U','#8b3fc0']], fn:'selectVowels' },
-      { parts:[['F','#0058bd'],['V','#2bb24c']],                                                  fn:'selectFV' },
+      { parts:[['V','#2bb24c'],['F','#0058bd']],                                                  fn:'selectFV' },
       { parts:[['M','#e8423a'],['N','#8b3fc0']],                                                  fn:'selectMN' },
       { parts:[['L','#f59e0b'],['J','#8b3fc0']],                                                  fn:'selectLJ' },
-      { parts:[['S','#0058bd'],['Z','#2bb24c']],                                                  fn:'selectSZ' },
-      { parts:[['R','#e8423a']],                                                                   fn:'selectR' },
+      { parts:[['S','#0058bd'],['Z','#2bb24c'],['R','#e8423a']],                                  fn:'selectSZR' },
       { parts:[['P','#e8423a'],['B','#0058bd'],['T','#2bb24c'],['D','#f59e0b']],                  fn:'selectPBTD' },
       { parts:[['C','#0058bd'],['G','#2bb24c']],                                                   fn:'selectCG' },
-      { parts:[['Q','#8b3fc0']],                                                                   fn:'selectQ' },
-      { parts:[['X','#e8423a'],['CH','#0058bd']],                                                  fn:'selectXCH' },
-      { parts:[['K','#2bb24c'],['W','#f59e0b'],['Y','#8b3fc0']],                                  fn:'selectKWY' },
-      { parts:[['H','#e8423a']],                                                                   fn:'selectH' },
+      { parts:[['Q','#8b3fc0'],['X','#e8423a'],['CH','#f59e0b']],                                 fn:'selectQX' },
+      { parts:[['K','#2bb24c'],['W','#f59e0b'],['Y','#8b3fc0'],['H','#e8423a']],                  fn:'selectKWYH' },
     ];
     for (const t of tiles) {
       const btn = document.createElement('button');
@@ -2076,14 +2095,11 @@ function selectVowels() { selectActivity(ACTIVITIES.vowels); }
 function selectFV()     { selectActivity(ACTIVITIES.fv); }
 function selectMN()     { selectActivity(ACTIVITIES.mn); }
 function selectLJ()     { selectActivity(ACTIVITIES.lj); }
-function selectSZ()     { selectActivity(ACTIVITIES.sz); }
-function selectR()      { selectActivity(ACTIVITIES.r); }
+function selectSZR()    { selectActivity(ACTIVITIES.szr); }
 function selectPBTD()   { selectActivity(ACTIVITIES.pbtd); }
 function selectCG()     { selectActivity(ACTIVITIES.cg); }
-function selectQ()      { selectActivity(ACTIVITIES.q); }
-function selectXCH()    { selectActivity(ACTIVITIES.xch); }
-function selectKWY()    { selectActivity(ACTIVITIES.kwy); }
-function selectH()      { selectActivity(ACTIVITIES.h); }
+function selectQX()     { selectActivity(ACTIVITIES.qx); }
+function selectKWYH()   { selectActivity(ACTIVITIES.kwyh); }
 
 function setGameMode(m) {
   gameMode = m;
@@ -2123,21 +2139,24 @@ const TEMAS = {
     chars:    ['temas/joao_maria/joao_joao_maria.png','temas/joao_maria/maria_joao_maria.png','temas/joao_maria/bruxa_joao_maria.png'],
     frase:    'Escreva a palavra completa!',
     audio:    'audio/saudacao_complete.mp3',
-    countKey: 'completeGreetCount'
+    countKey: 'completeGreetCount',
+    charPos:  { left: '85%', bottom: '6.25%' }
   },
   vogais: {
     bg:       'temas/cigarra_formiga/background_cigarra_formiga.png',
     chars:    ['temas/cigarra_formiga/cigarra.png','temas/cigarra_formiga/formiga1.png','temas/cigarra_formiga/formiga2.png'],
     frase:    'Complete as vogais!',
     audio:    'audio/saudacao_vogais.mp3',
-    countKey: 'vogaisGreetCount'
+    countKey: 'vogaisGreetCount',
+    charPos:  { left: '85%', bottom: '6.25%' }
   },
   consoantes: {
     bg:       'temas/tartaruga_lebre/background_tartaruga_lebre.png',
     chars:    ['temas/tartaruga_lebre/tartaruga.png','temas/tartaruga_lebre/lebre.png'],
     frase:    'Complete as consoantes!',
     audio:    'audio/saudacao_consoantes.mp3',
-    countKey: 'consoantesGreetCount'
+    countKey: 'consoantesGreetCount',
+    charPos:  { left: '80%', bottom: '6.25%' }
   },
   embaralhado: {
     bg:       'temas/sitio_pica_pau/background_sitio.png',
@@ -2182,9 +2201,21 @@ function updateMenuCharacter() {
   const tema   = TEMAS[gameMode] || TEMAS.letras;
   const img    = document.getElementById('menu-char-img');
   const bubble = document.getElementById('menu-speech-bubble');
-  if (!img || !bubble) return;
+  const el     = document.getElementById('menu-character');
+  if (!img || !bubble || !el) return;
   img.src            = tema.chars[Math.floor(Math.random() * tema.chars.length)];
   bubble.textContent = tema.frase;
+  if (tema.charPos) {
+    el.style.left      = tema.charPos.left;
+    el.style.bottom    = tema.charPos.bottom;
+    el.style.right     = '';
+    el.style.transform = 'translateX(-50%)';
+  } else {
+    el.style.left      = '';
+    el.style.right     = '24px';
+    el.style.bottom    = '24px';
+    el.style.transform = '';
+  }
   const count = parseInt(localStorage.getItem(tema.countKey) || '0');
   localStorage.setItem(tema.countKey, count + 1);
   if (count < 3) playMenuGreeting(tema);
@@ -2241,6 +2272,32 @@ document.addEventListener('keydown', e => {
   }
   if (keys.includes(key)) clickOption(key);
 });
+
+// ─── Grade de debug ───────────────────────────────────────────────────────────
+(function buildDebugGrid() {
+  const cols = 'ABCDEFGHIJ'.split('');
+  const rows = 8;
+  const grid = document.createElement('div');
+  grid.id = 'debug-grid';
+  for (let r = 1; r <= rows; r++) {
+    for (let c = 0; c < cols.length; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'debug-cell';
+      cell.textContent = cols[c] + r;
+      grid.appendChild(cell);
+    }
+  }
+  document.body.appendChild(grid);
+
+  const btn = document.createElement('button');
+  btn.id = 'debug-grid-btn';
+  btn.textContent = '⊞ grade';
+  btn.addEventListener('click', () => {
+    const visible = grid.classList.toggle('visible');
+    btn.textContent = visible ? '✕ grade' : '⊞ grade';
+  });
+  document.body.appendChild(btn);
+})();
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
