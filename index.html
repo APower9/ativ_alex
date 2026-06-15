@@ -1451,8 +1451,10 @@ function playEnunciado(onEnd, onStart) {
 }
 
 function playRoundIntro(word) {
+  const skipWordAudio = gameMode === 'embaralhado';
   // Rodadas seguintes já rolam após um gesto → áudio destravado.
   if (enunciadoDone) {
+    if (skipWordAudio) { setButtonsEnabled(true); return; }
     playWordAudio(word, () => setButtonsEnabled(true));
     return;
   }
@@ -1479,8 +1481,8 @@ function playRoundIntro(word) {
     cleanup();
     enunciadoDone = true;
     overlay.style.display = 'none';
-    if (withWord) setTimeout(() => playWordAudio(word, () => setButtonsEnabled(true)), 280);
-    else          setButtonsEnabled(true);   // fallback mudo; replay toca depois
+    if (withWord && !skipWordAudio) setTimeout(() => playWordAudio(word, () => setButtonsEnabled(true)), 280);
+    else                            setButtonsEnabled(true);
   }
 
   function startEnunciado() {
