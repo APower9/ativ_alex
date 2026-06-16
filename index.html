@@ -2100,7 +2100,9 @@ let inGame = false;
 function showMenu() {
   inGame = false;
   synth.cancel();
-  stopTrilha();
+  const tema = TEMAS[gameMode];
+  if (tema && tema.trilha) playTrilha(tema.trilha);
+  else stopTrilha();
   document.getElementById('game-screen').style.display = 'none';
   document.getElementById('end-screen').classList.add('hidden');
   document.getElementById('speech-overlay').style.display = 'none';
@@ -2117,9 +2119,7 @@ function selectActivity(activity) {
   inGame = true;
   document.getElementById('menu-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = '';
-  const tema = TEMAS[gameMode];
-  if (tema && tema.trilha) playTrilha(tema.trilha);
-  else stopTrilha();
+  stopTrilha();
   startGame();
 }
 
@@ -2141,6 +2141,9 @@ function setGameMode(m) {
   renderMenuTiles();
   applyBackground();
   updateMenuCharacter();
+  const tema = TEMAS[m];
+  if (tema && tema.trilha) playTrilha(tema.trilha);
+  else stopTrilha();
 }
 
 // ─── Temas (personagens e fundos por modo) ────────────────────────────────────
