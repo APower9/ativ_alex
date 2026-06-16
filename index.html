@@ -2064,12 +2064,43 @@ function startGame() {
   loadRound(0);
 }
 
+// ─── Trilha de fundo ──────────────────────────────────────────────────────────────
+let trilhaAudio  = null;
+let trilhaTimers = [];
+
+function stopTrilha() {
+  trilhaTimers.forEach(clearTimeout);
+  trilhaTimers = [];
+  if (trilhaAudio) { trilhaAudio.pause(); trilhaAudio = null; }
+}
+
+function playTrilha(src) {
+  stopTrilha();
+  const a = new Audio(src);
+  a.volume = 0.4;
+  a.play().catch(() => {});
+  trilhaAudio = a;
+  // Após 15s inicia fadeout de 1.5s (30 passos × 50ms)
+  trilhaTimers.push(setTimeout(() => {
+    const steps = 30;
+    let i = 0;
+    const tick = setInterval(() => {
+      i++;
+      if (!trilhaAudio || trilhaAudio !== a) { clearInterval(tick); return; }
+      a.volume = Math.max(0, 0.4 * (1 - i / steps));
+      if (i >= steps) { clearInterval(tick); a.pause(); if (trilhaAudio === a) trilhaAudio = null; }
+    }, 50);
+    trilhaTimers.push(tick);
+  }, 15000));
+}
+
 // ─── Navegação de telas ─────────────────────────────────────────────────────────
 let inGame = false;
 
 function showMenu() {
   inGame = false;
   synth.cancel();
+  stopTrilha();
   document.getElementById('game-screen').style.display = 'none';
   document.getElementById('end-screen').classList.add('hidden');
   document.getElementById('speech-overlay').style.display = 'none';
@@ -2086,6 +2117,9 @@ function selectActivity(activity) {
   inGame = true;
   document.getElementById('menu-screen').style.display = 'none';
   document.getElementById('game-screen').style.display = '';
+  const tema = TEMAS[gameMode];
+  if (tema && tema.trilha) playTrilha(tema.trilha);
+  else stopTrilha();
   startGame();
 }
 
@@ -2116,14 +2150,16 @@ const TEMAS = {
     chars:    ['temas/tres_porquinhos/porquinho_palha.png','temas/tres_porquinhos/porquinho_madeira.png','temas/tres_porquinhos/porquinho_tijolo.png'],
     frase:    'Me ajude com as letras!!',
     audio:    'audio/saudacao_letras.mp3',
-    countKey: 'letrasGreetCount'
+    countKey: 'letrasGreetCount',
+    trilha:   'temas/tres_porquinhos/porquinho_trilha.mp3'
   },
   palavras: {
     bg:       'temas/chapeuzinho/background_chapeuzinho.png',
     chars:    ['temas/chapeuzinho/chapeuzinho.png','temas/chapeuzinho/lobo_chapeuzinho.png','temas/chapeuzinho/vovo_chapeuzinho.png'],
     frase:    'Me ajude com as palavras.',
     audio:    'audio/saudacao_palavras.mp3',
-    countKey: 'palavrasGreetCount'
+    countKey: 'palavrasGreetCount',
+    trilha:   'temas/chapeuzinho/chapeuzinho_trilha.mp3'
   },
   lacuna: {
     bg:       'temas/joao_pe_feijao/background_joao_feijao.png',
