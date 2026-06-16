@@ -1,0 +1,401 @@
+IMAGENS FALTANDO — ÁREA LETRAS
+Gerado em 2026-06-13
+Formato: baseName | palavra exibida | observação
+════════════════════════════════════════════════════════════
+
+▶ ATIVIDADE F-V
+── Letra F (7 faltando) ──────────────────────────────────
+filme        | filme
+forno        | forno
+foto         | foto
+framboesa    | framboesa
+frango       | frango
+fruta        | fruta
+futebol      | futebol
+
+── Letra V (2 faltando) ──────────────────────────────────
+vagalume     | vaga-lume   | ATENÇÃO: arquivo vaga-lume.png existe mas o código procura vagalume.png — renomear arquivo para vagalume.png resolve
+vinte        | vinte
+
+▶ ATIVIDADE M-N
+── Letra N (1 faltando) ──────────────────────────────────
+numero       | número      | ATENÇÃO: arquivo numeros.png existe mas o código procura numero.png — renomear arquivo para numero.png resolve
+
+▶ ATIVIDADE L-J
+── Letra L (42 faltando — todas) ─────────────────────────
+la           | lã
+labareda     | labareda
+laco         | laço
+ladrao       | ladrão
+lagarta      | lagarta
+lagarto      | lagarto
+lago         | lago
+lagosta      | lagosta
+lama         | lama
+lampada      | lâmpada
+lanca        | lança
+lancha       | lancha
+lanche       | lanche
+lanterna     | lanterna
+lapis        | lápis
+laranja      | laranja
+lasanha      | lasanha
+lata         | lata
+leao         | leão
+lebre        | lebre
+leite        | leite
+lenco        | lenço
+lenha        | lenha
+lente        | lente
+leopardo     | leopardo
+letra        | letra
+libelula     | libélula
+lilas        | lilás
+limao        | limão
+lingua       | língua
+linha        | linha
+lirio        | lírio
+livro        | livro
+lixo         | lixo
+lobo         | lobo
+locomotiva   | locomotiva
+lontra       | lontra
+lua          | lua
+lula         | lula
+lupa         | lupa
+luva         | luva
+luz          | luz
+
+── Letra J (23 faltando — todas) ─────────────────────────
+jaca         | jaca
+jacare       | jacaré
+jabuti       | jabuti
+jabuticaba   | jabuticaba
+jaguar       | jaguar
+jaguatirica  | jaguatirica
+janela       | janela
+jangada      | jangada
+jaqueta      | jaqueta
+jararaca     | jararaca
+jardim       | jardim
+jarro        | jarro
+jato         | jato
+jaula        | jaula
+jenipapo     | jenipapo
+jiboia       | jiboia
+joaninha     | joaninha
+joelho       | joelho
+jogo         | jogo
+joia         | joia
+jornal       | jornal
+jumento      | jumento
+juiz         | juiz
+
+▶ ATIVIDADE S-Z
+── Letra S (30 faltando — todas) ─────────────────────────
+sabao        | sabão
+sabonete     | sabonete
+saco         | saco
+sacola       | sacola
+saia         | saia
+sal          | sal
+salada       | salada
+salsicha     | salsicha
+sandalia     | sandália
+sanduiche    | sanduíche
+sapato       | sapato
+sapo         | sapo
+sardinha     | sardinha
+seda         | seda
+selo         | selo
+semente      | semente
+sereia       | sereia
+serpente     | serpente
+serra        | serra
+seta         | seta
+sino         | sino
+siri         | siri
+sofa         | sofá
+sol          | sol
+soldado      | soldado
+sopa         | sopa
+sorvete      | sorvete
+submarino    | submarino
+suco         | suco
+sunga        | sunga
+
+── Letra Z (6 faltando — todas) ──────────────────────────
+zangao       | zangão
+zebra        | zebra
+zebu         | zebu
+zepelim      | zepelim
+ziper        | zíper
+zoologico    | zoológico
+
+▶ ATIVIDADE R
+── Letra R (26 faltando — todas) ─────────────────────────
+ra           | rã
+rabanete     | rabanete
+radio        | rádio
+raio         | raio
+rainha       | rainha
+raiz         | raiz
+ramo         | ramo
+raposa       | raposa
+rato         | rato
+rede         | rede
+regador      | regador
+regua        | régua
+rei          | rei
+relogio      | relógio
+remo         | remo
+repolho      | repolho
+rinoceronte  | rinoceronte
+rio          | rio
+robo         | robô
+roda         | roda
+rolha        | rolha
+rosa         | rosa
+rosto        | rosto
+roupa        | roupa
+rua          | rua
+rubi         | rubi
+
+▶ ATIVIDADE P-B-T-D
+── Letra P (25 faltando — todas) ─────────────────────────
+palhaco      | palhaço
+panela       | panela
+pao          | pão
+papagaio     | papagaio
+pato         | pato
+pavao        | pavão
+peixe        | peixe
+pente        | pente
+pepino       | pepino
+pera         | pera
+piao         | pião
+pincel       | pincel
+pinguim      | pinguim
+pipoca       | pipoca
+pirulito     | pirulito
+pizza        | pizza
+planeta      | planeta
+polvo        | polvo
+pomba        | pomba
+ponte        | ponte
+porco        | porco
+porta        | porta
+prato        | prato
+prego        | prego
+pulga        | pulga
+
+── Letra B (21 faltando — todas) ─────────────────────────
+bala         | bala
+balao        | balão
+baleia       | baleia
+banana       | banana
+bandeira     | bandeira
+barco        | barco
+batata       | batata
+bebe         | bebê
+bicicleta    | bicicleta
+bife         | bife
+bigode       | bigode
+bola         | bola
+bolo         | bolo
+boneca       | boneca
+borboleta    | borboleta
+bota         | bota
+braco        | braço
+bruxa        | bruxa
+bule         | bule
+burro        | burro
+buzina       | buzina
+
+── Letra T (22 faltando — todas) ─────────────────────────
+tambor       | tambor
+tartaruga    | tartaruga
+tatu         | tatu
+telefone     | telefone
+tenis        | tênis
+tesoura      | tesoura
+tigre        | tigre
+tijolo       | tijolo
+tinta        | tinta
+toalha       | toalha
+tomate       | tomate
+torneira     | torneira
+touca        | touca
+trator       | trator
+trem         | trem
+triangulo    | triângulo
+triciclo     | triciclo
+tromba       | tromba
+tronco       | tronco
+tubarao      | tubarão
+tucano       | tucano
+tulipa       | tulipa
+
+── Letra D (14 faltando — todas) ─────────────────────────
+dado         | dado
+dalia        | dália
+dardo        | dardo
+dedo         | dedo
+dente        | dente
+dentadura    | dentadura
+dinheiro     | dinheiro
+dinossauro   | dinossauro
+disco        | disco
+doce         | doce
+domino       | dominó
+dragao       | dragão
+dromedario   | dromedário
+duna         | duna
+
+▶ ATIVIDADE C-G
+── Letra C (31 faltando — todas) ─────────────────────────
+cabeca       | cabeça
+cabelo       | cabelo
+cabra        | cabra
+cachorro     | cachorro
+cadeado      | cadeado
+cadeira      | cadeira
+caderno      | caderno
+cafe         | café
+caixa        | caixa
+calca        | calça
+camelo       | camelo
+caminhao     | caminhão
+camisa       | camisa
+canguru      | canguru
+caneta       | caneta
+canoa        | canoa
+capacete     | capacete
+caracol      | caracol
+carneiro     | carneiro
+carro        | carro
+casa         | casa
+casaco       | casaco
+castelo      | castelo
+cavalo       | cavalo
+coelho       | coelho
+cofre        | cofre
+copo         | copo
+coracao      | coração
+corda        | corda
+coruja       | coruja
+cozinha      | cozinha
+
+── Letra G (19 faltando — todas) ─────────────────────────
+gado         | gado
+gaiola       | gaiola
+galinha      | galinha
+galo         | galo
+gamba        | gambá
+gancho       | gancho
+ganso        | ganso
+garca        | garça
+garfo        | garfo
+garganta     | garganta
+garrafa      | garrafa
+gato         | gato
+gaveta       | gaveta
+gaviao       | gavião
+goiaba       | goiaba
+golfinho     | golfinho
+gorila       | gorila
+gota         | gota
+guarana      | guaraná
+
+▶ ATIVIDADE Q
+── Letra Q (12 faltando — todas) ─────────────────────────
+quadra       | quadra
+quadrado     | quadrado
+quadrinhos   | quadrinhos
+quadro       | quadro
+quarto       | quarto
+quati        | quati
+quatro       | quatro
+queijo       | queijo
+quepe        | quepe
+quiabo       | quiabo
+quilo        | quilo
+quintal      | quintal
+
+▶ ATIVIDADE X-CH
+── Letra X (7 faltando — todas) ──────────────────────────
+xadrez       | xadrez
+xale         | xale
+xampu        | xampu
+xarope       | xarope
+xicara       | xícara
+xilofone     | xilofone
+xerife       | xerife
+
+── CH (17 faltando — todas) ──────────────────────────────
+cha          | chá
+chaleira     | chaleira
+chamine      | chaminé
+chapeu       | chapéu
+chave        | chave
+chaveiro     | chaveiro
+chiclete     | chiclete
+chifre       | chifre
+chimpanze    | chimpanzé
+chinelo      | chinelo
+chocalho     | chocalho
+chocolate    | chocolate
+chuchu       | chuchu
+chupeta      | chupeta
+churrasco    | churrasco
+chuva        | chuva
+chuveiro     | chuveiro
+
+▶ ATIVIDADE K-W-Y
+── K / W / Y (9 faltando — todas) ────────────────────────
+kiwi         | kiwi
+ketchup      | ketchup
+kart         | kart
+kitesurf     | kitesurf
+waffle       | waffle
+windsurfe    | windsurfe
+web          | web
+yoga         | yoga
+yakisoba     | yakisoba
+
+▶ ATIVIDADE H
+── Letra H (13 faltando — todas) ─────────────────────────
+hamburguer   | hambúrguer
+handebol     | handebol
+harpia       | harpia
+helice       | hélice
+helicoptero  | helicóptero
+heroi        | herói
+hiena        | hiena
+hipopotamo   | hipopótamo
+homem        | homem
+horta        | horta
+hortela      | hortelã
+hospital     | hospital
+hotel        | hotel
+
+════════════════════════════════════════════════════════════
+RESUMO POR ATIVIDADE
+════════════════════════════════════════════════════════════
+F-V      →  9 faltando  (F: 7 · V: 2)
+M-N      →  1 faltando  (N: 1 — renomear numero.png)
+L-J      → 65 faltando  (L: 42 · J: 23)
+S-Z      → 36 faltando  (S: 30 · Z: 6)
+R        → 26 faltando
+P-B-T-D  → 82 faltando  (P: 25 · B: 21 · T: 22 · D: 14)
+C-G      → 50 faltando  (C: 31 · G: 19)
+Q        → 12 faltando
+X-CH     → 24 faltando  (X: 7 · CH: 17)
+K-W-Y    →  9 faltando
+H        → 13 faltando
+────────────────────────────────────────────────────────────
+TOTAL    → 327 palavras sem imagem
+
+AÇÕES RÁPIDAS (renomear arquivos que já existem):
+  img/vaga-lume.png  →  img/vagalume.png   (resolve vaga-lume)
+  img/numeros.png    →  img/numero.png     (resolve número)
