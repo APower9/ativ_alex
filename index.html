@@ -1576,8 +1576,10 @@ function getThemeChar() {
 function loadRound(index) {
   if (!inGame) return;            // saiu para o menu: aborta a rodada pendente
   currentWord  = deck[index];
-  const charSrc = getThemeChar();
-  document.getElementById('character-img').src = charSrc;
+  const charSrc  = getThemeChar();
+  const charImg  = document.getElementById('character-img');
+  charImg.src    = charSrc;
+  applyCharSize(charImg, charSrc, TEMAS[gameMode] || TEMAS.letras);
   const charOuter = document.getElementById('character-group').parentElement;
   const temaAtual = TEMAS[gameMode] || TEMAS.letras;
   if (temaAtual.charPos) {
@@ -2203,7 +2205,8 @@ const TEMAS = {
     frase:    'Descubra a palavra!',
     audio:    'audio/saudacao_embaralhado.mp3',
     countKey: 'embaralhadoGreetCount',
-    trilha:   'temas/sitio_pica_pau/sitio_trilha.mp3'
+    trilha:   'temas/sitio_pica_pau/sitio_trilha.mp3',
+    charSizes: { 'emilia': '180px' }
   }
 };
 
@@ -2236,6 +2239,12 @@ function applyBackground() {
 
 function toggleBackground() { bgOn = !bgOn; applyBackground(); }
 
+function applyCharSize(img, src, tema) {
+  if (!tema.charSizes) { img.style.width = ''; return; }
+  const key = Object.keys(tema.charSizes).find(k => src.includes(k));
+  img.style.width = key ? tema.charSizes[key] : '';
+}
+
 // ─── Personagem do menu ───────────────────────────────────────────────────────
 function updateMenuCharacter() {
   const tema   = TEMAS[gameMode] || TEMAS.letras;
@@ -2244,6 +2253,7 @@ function updateMenuCharacter() {
   const el     = document.getElementById('menu-character');
   if (!img || !bubble || !el) return;
   img.src            = tema.chars[Math.floor(Math.random() * tema.chars.length)];
+  applyCharSize(img, img.src, tema);
   bubble.textContent = tema.frase;
   if (tema.charPos) {
     el.style.left      = tema.charPos.left;
